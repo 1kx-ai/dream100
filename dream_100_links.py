@@ -63,7 +63,7 @@ def main():
         raise ValueError("Please set valid GOOGLE_API_KEY and GOOGLE_SEARCH_ENGINE_ID")
 
     input_file = "dream100.json"
-    output_file = "dream100_output.json"
+    output_file = "dream100_links.json"
 
     # Load input data
     with open(input_file, "r") as f:

@@ -1,38 +1,12 @@
 import os
-from urllib.parse import urlparse, parse_qs
 from googleapiclient.discovery import build
-from youtube_transcript_api import YouTubeTranscriptApi
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 import json
 import time
 
-API_KEY = "AIzaSyDfJMbk8UalElj9dM0uXScN6HZGbcaoIwA"
+API_KEY = "AIzaSyD6JjSdnwz15Bv9A0lcXfZzWCAR5-RCaiY"
 
 youtube = build("youtube", "v3", developerKey=API_KEY)
-
-
-def get_youtube_transcript(video_url):
-    try:
-        # Extract video ID from the URL
-        parsed_url = urlparse(video_url)
-        video_id = parse_qs(parsed_url.query).get("v")
-
-        if not video_id:
-            raise ValueError("Invalid YouTube URL. Unable to extract video ID.")
-
-        video_id = video_id[0]
-
-        # Fetch the transcript
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
-
-        # Combine all text parts into a single string
-        full_transcript = " ".join([entry["text"] for entry in transcript])
-
-        return full_transcript
-
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        return None
 
 
 def get_channel_id_from_url(url):

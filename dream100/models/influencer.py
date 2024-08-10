@@ -16,7 +16,7 @@ class Influencer(Base):
     """
     Represents an influencer in the influencer management system.
 
-    An influencer can be associated with multiple projects.
+    An influencer can be associated with multiple projects and have multiple web properties.
 
     Attributes:
         id (int): The unique identifier for the influencer.
@@ -35,6 +35,7 @@ class Influencer(Base):
     projects = relationship(
         "Project", secondary=influencer_project, back_populates="influencers"
     )
+    web_properties = relationship("WebProperty", back_populates="influencer")
 
     def __repr__(self):
         return f"<Influencer(id={self.id}, name='{self.name}')>"

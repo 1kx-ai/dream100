@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 from dream100.db_config import Base
 from datetime import datetime
+from .influencer import influencer_project
 
 
 class Project(Base):
@@ -27,8 +28,9 @@ class Project(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # This will be used when we implement the Influencer model
-    # influencers = relationship("Influencer", back_populates="project")
+    influencers = relationship(
+        "Influencer", secondary=influencer_project, back_populates="projects"
+    )
 
     def __repr__(self):
         return f"<Project(id={self.id}, name='{self.name}')>"

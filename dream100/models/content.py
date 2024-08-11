@@ -1,6 +1,14 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from dream100.db_config import Base
+from enum import Enum as PyEnum
+
+
+class ContentStatus(PyEnum):
+    NONE = "none"
+    OK = "ok"
+    WARNING = "warning"
+    ERROR = "error"
 
 
 class Content(Base):
@@ -11,8 +19,9 @@ class Content(Base):
     link = Column(String(500), nullable=False)
     scraped_content = Column(Text)
     views = Column(Integer, default=0)
+    status = Column(Enum(ContentStatus), default=ContentStatus.NONE, nullable=False)
 
     web_property = relationship("WebProperty", back_populates="contents")
 
     def __repr__(self):
-        return f"<Content(id={self.id}, link='{self.link}', views={self.views})>"
+        return f"<Content(id={self.id}, link='{self.link}', views={self.views}, status={self.status})>"

@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from dream100.db_config import create_session, init_db, Base
 from dream100.projects.projects import ProjectContext
 from dream100.influencers.influencers import InfluencerContext
-from dream100.web_properties.web_property_context import WebPropertyContext
+from dream100.web_properties.web_properties import WebPropertyContext
 from dream100.contents.contents import ContentContext
 from dream100_cli.main_cli import main_menu
 from sqlalchemy import inspect

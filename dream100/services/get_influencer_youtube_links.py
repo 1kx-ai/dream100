@@ -30,20 +30,13 @@ class GetYouTubeLinksService:
                 return parsed_url.path.split("/")[-1]
             elif parsed_url.path.startswith("/user/"):
                 username = parsed_url.path.split("/")[-1]
-                response = (
-                    self.youtube.channels()
-                    .list(part="id", forUsername=username)
-                    .execute()
-                )
+                response = self.youtube.channels().list(part="id", forUsername=username).execute()
                 if "items" in response:
                     return response["items"][0]["id"]
-            elif parsed_url.path.startswith("/c/"):
+            elif parsed_url.path.startswith("/c/") or parsed_url.path.startswith("/@"):
+                # Handle both /c/ and /@ URLs
                 custom_name = parsed_url.path.split("/")[-1]
-                response = (
-                    self.youtube.search()
-                    .list(part="id", q=custom_name, type="channel")
-                    .execute()
-                )
+                response = self.youtube.search().list(part="id", q=custom_name, type="channel").execute()
                 if "items" in response:
                     return response["items"][0]["id"]["channelId"]
         return None

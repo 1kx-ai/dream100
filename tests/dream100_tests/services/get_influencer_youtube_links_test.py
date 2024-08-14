@@ -56,6 +56,10 @@ def test_get_channel_id_from_url(youtube_links_service):
     custom_channel_id = youtube_links_service.get_channel_id_from_url("https://www.youtube.com/c/Computerphile")
     assert custom_channel_id == "UC9-y-6csu5WGm29I7JiwpnA"
 
+    # New test case for @ tag URL
+    at_tag_channel_id = youtube_links_service.get_channel_id_from_url("https://www.youtube.com/@Computerphile")
+    assert at_tag_channel_id == "UC9-y-6csu5WGm29I7JiwpnA"
+
 @my_vcr.use_cassette()
 def test_get_channel_videos(youtube_links_service):
     videos = youtube_links_service.get_channel_videos("https://www.youtube.com/channel/UCa-vrCLQHviTOVnEKDOdetQ")

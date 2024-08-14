@@ -31,7 +31,7 @@ interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Wed, 14 Aug 2024 18:03:29 GMT
+      - Wed, 14 Aug 2024 18:10:06 GMT
       Server:
       - scaffolding on HTTPServer2
       Transfer-Encoding:
@@ -67,15 +67,15 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAC/62P0Y6aQBSG730KQ28lAa2Ce8cqIrgKgiNg0xCQERAZkBmCuPHdC7K7TZr2qtzM
-        ZP7zzTnne+/1+1QcIZ966VNVWpDCg98wdPNj+BZhokOcpQhDatBwkLhBw4n7dKyXh2Uu0Aq04+2i
-        WO43srE4KqAFEbwRzQ3gLo0han7MBLAVhLaYwyBK0Sz1YVORxTbNalxGp7TO3ut3nZCUuJd6geJC
-        cJ0O2dGgLeRtpsG8mVGXxnX+eHaJCEwa+MeTbBv9U7DtTQ0+qU89/sZ4bBln0Jgkpb3ltYM+n0/9
-        qSSmv+HI/9r0ryOOoYsQvHx9qJGPSH5yYDalK3pyxMXYlJLhVOaUqMyQQH3wj+f9GPyPyJlLsBSk
-        OzG/gkOuebyaZPJSPUUO36XIekK7eDeOPTo0JyIx2Tx2/bJLEei8kTs7NrxKnTACsVAEF0UkW+sc
-        dykCzB13Dl9XDtLW37mDsChFetWpyE3lgcrewzIyDUOfApuxFMYM7EscdCnCjhBgr9VmM8QnbZaL
-        Ksz2Tqcimzth9JWlSIytz4URL6ElPZoByylAlyKverJFZoUBfVXuZEV7/rngtn+I1OfP3qP3C2tb
-        HWDLBAAA
+        H4sIAAAAAAAC/62RSY+bQBCF7/4VFrkaaXDMllvbxjZeWYcZoshiaQPGNAw0ATzyf09jZpFGySlc
+        utXvfV1VT/U6GA6pOEI+9WNINWmJSxd+K6CTe+E2KrAGiyxFBaRGLQexE7TcXtOFk7l/tBdzgVtt
+        f2uy1SRMI+5OagciWGPFCaCRxhC1P2bAVAHozBwGUYpmqQ9bR5Y6NSO4jE4p0V7Jmyg4xc6FDFBe
+        cEHUMcONOiPvNAXmbQ9isUS/3atEGCYt/PNOdoX+GbCrTY3eqfd4Qv3gMlWcQZ1LqmdVUGxtPhd9
+        cSmln3Dkf0z61xZe6CAELx8fCPImyXfOnIl0Q3NeUbLWMhmLMr+OqgwB6o2/3e/b6H+CwOMWXxlW
+        d5sD9wDwE4rgoozkp11e9BnEtAz+HE43R6TsJrwNFpVEb6o+g7DyGUxdPwhcTc8cXcq87Xa6X05y
+        W+0zyNThWFG1pJgB8sQIaDrJ1+NeN3Lmk2IZpIaUv5h2rrjCIcnk1eEUHYU+g+w42ikMNnbp0OIk
+        bDF57Pi9biS2+Y1aq8dVeRVgLdLeZl0rBWBRCPoMktbe+YUWanluPGffyys34R/Zrxsh56/BbfAH
+        QsBHS8sEAAA=
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -86,7 +86,62 @@ interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Wed, 14 Aug 2024 18:03:31 GMT
+      - Wed, 14 Aug 2024 18:10:07 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '0'
+      user-agent:
+      - (gzip)
+      x-goog-api-client:
+      - gdcl/2.140.0 gl-python/3.10.2
+    method: GET
+    uri: https://youtube.googleapis.com/youtube/v3/search?part=id&q=%40Computerphile&type=channel&key=AIzaSyCa7hmDieYjjhC40ZREbuO_ocmZWusaxro&alt=json
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/62TT5OaMBiH734Kh15lZgFR01sUXUF0QUCrnR74k8UAhgBBtDt+94Lsbmc67alc
+        ksnvffImz2Ty1uv3uRiTgPva525pyUoPfSmQm/snHRdsiwqakgJxg4ZDzA0b7uCZOq+EM2DNbSPa
+        xdcR3hwgScersAUJujLDDZGdxog0O2bQMSFsizkKcUpmaYCaijpvU1rjKnlN6+ytXtcJS5mb1Bco
+        E1bUqSBJg7aQt5mB8uaMuiTX+f3RBTN0buDvD7Jt9E/Btjc3+KA+9CbXJ0+oYoqs0bk6mBPjuFUU
+        EIDnefobxsHnTf96hH9yCUHJ54YaeY/UB+fMAH/jR35RyvvnswjUsYYrSiD3zt8f833wPyJkCVjl
+        JeQolBY8iAmgt9DBE4hUp0sRAREqnl4uYsmHUjXXeL8w9LBLkTmv7JbyMbKjxWadPvG+eFqIMV35
+        9rBLEayM2VgeYii8gpO2z5cZKOOqSxEaRnQngew8wvHUC+jBLlU8cpypaXb6IuW+kqd7YI6VJe9P
+        LxG4wczsUkQL7EsOiSTpR9cM9Wq9KDNrpQSXoOhSRNv+XO/BcJFkIoo39FvgM2j9+Ufq8Ufv3vsF
+        vCmntcsEAAA=
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Cache-Control:
+      - private
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Wed, 14 Aug 2024 18:10:07 GMT
       Server:
       - scaffolding on HTTPServer2
       Transfer-Encoding:

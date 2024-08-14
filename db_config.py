@@ -1,13 +1,11 @@
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 load_dotenv()
 
 Base = declarative_base()
-
 
 def get_database_url():
     """Construct database URL from environment variables"""
@@ -22,18 +20,15 @@ def get_database_url():
 
     return f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
 
-
 def create_session():
     """Create a new database session"""
     engine = create_engine(get_database_url())
     Session = sessionmaker(bind=engine)
     return Session(), engine
 
-
 def init_db(engine):
     """Initialize the database by creating all tables and ensuring the vector extension is installed"""
     with engine.connect() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         conn.commit()
-
     Base.metadata.create_all(engine)

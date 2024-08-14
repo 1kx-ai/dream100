@@ -15,7 +15,7 @@ class ContentContext:
         views=0,
         status=ContentStatus.NONE,
     ):
-        web_property = self.session.query(WebProperty).get(web_property_id)
+        web_property = self.session.get(WebProperty, web_property_id)
         if web_property:
             content = Content(
                 web_property_id=web_property_id,
@@ -34,7 +34,7 @@ class ContentContext:
         return None
 
     def get_content(self, content_id):
-        return self.session.query(Content).get(content_id)
+        return self.session.get(Content, content_id)
 
     def update_content(
         self, content_id, link=None, scraped_content=None, views=None, status=None

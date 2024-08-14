@@ -22,7 +22,7 @@ class WebPropertyContext:
             raise e
 
     def get_web_property(self, web_property_id):
-        return self.session.query(WebProperty).get(web_property_id)
+        return self.session.get(WebProperty, web_property_id)
 
     def update_web_property(self, web_property_id, type=None, url=None, followers=None):
         web_property = self.get_web_property(web_property_id)

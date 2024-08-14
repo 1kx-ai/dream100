@@ -22,7 +22,7 @@ class InfluencerContext:
             raise e
 
     def get_influencer(self, influencer_id):
-        return self.session.query(Influencer).get(influencer_id)
+        return self.session.get(Influencer, influencer_id)
 
     def update_influencer(self, influencer_id, name=None, project_ids=None):
         influencer = self.get_influencer(influencer_id)

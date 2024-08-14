@@ -17,7 +17,7 @@ class ProjectContext:
             raise e
 
     def get_project(self, project_id):
-        return self.session.query(Project).get(project_id)
+        return self.session.get(Project, project_id)
 
     def update_project(self, project_id, name=None, description=None):
         project = self.get_project(project_id)

@@ -1,0 +1,107 @@
+interactions:
+- request:
+    body: null
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '0'
+      user-agent:
+      - (gzip)
+      x-goog-api-client:
+      - gdcl/2.140.0 gl-python/3.10.2
+    method: GET
+    uri: https://youtube.googleapis.com/youtube/v3/channels?part=id&forUsername=Computerphile&key=AIzaSyCa7hmDieYjjhC40ZREbuO_ocmZWusaxro&alt=json
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/3WOwQqCQBCG7z6FbFeFMrS2m0RFklRCFkWHraZa1FXaNbHw3RuV6NRlYL755ud/
+        a7pOIi4uZKSTMs1VfoLO+c6EgHjBpQpAZqmQQIxaBMVutQjBDvqW75fmutyvC29yt5Y8fF0o7bZi
+        xm4wF9cU5TfuSFSqWIxpeawk0p7R4kdLVvBY4QsebORVk8EVJLV6aMw25n9ZYnyFb8lnmLyoqyLJ
+        xsOlE0fTcBrwZ8FmweYn8yZrM6ZmaTpnmdvbWWLR+cDjRSZc0mgVzqNWaR94f+xkLAEAAA==
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Cache-Control:
+      - private
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Wed, 14 Aug 2024 18:03:29 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '0'
+      user-agent:
+      - (gzip)
+      x-goog-api-client:
+      - gdcl/2.140.0 gl-python/3.10.2
+    method: GET
+    uri: https://youtube.googleapis.com/youtube/v3/search?part=id&q=Computerphile&type=channel&key=AIzaSyCa7hmDieYjjhC40ZREbuO_ocmZWusaxro&alt=json
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/62P0Y6aQBSG730KQ28lAa2Ce8cqIrgKgiNg0xCQERAZkBmCuPHdC7K7TZr2qtzM
+        ZP7zzTnne+/1+1QcIZ966VNVWpDCg98wdPNj+BZhokOcpQhDatBwkLhBw4n7dKyXh2Uu0Aq04+2i
+        WO43srE4KqAFEbwRzQ3gLo0han7MBLAVhLaYwyBK0Sz1YVORxTbNalxGp7TO3ut3nZCUuJd6geJC
+        cJ0O2dGgLeRtpsG8mVGXxnX+eHaJCEwa+MeTbBv9U7DtTQ0+qU89/sZ4bBln0Jgkpb3ltYM+n0/9
+        qSSmv+HI/9r0ryOOoYsQvHx9qJGPSH5yYDalK3pyxMXYlJLhVOaUqMyQQH3wj+f9GPyPyJlLsBSk
+        OzG/gkOuebyaZPJSPUUO36XIekK7eDeOPTo0JyIx2Tx2/bJLEei8kTs7NrxKnTACsVAEF0UkW+sc
+        dykCzB13Dl9XDtLW37mDsChFetWpyE3lgcrewzIyDUOfApuxFMYM7EscdCnCjhBgr9VmM8QnbZaL
+        Ksz2Tqcimzth9JWlSIytz4URL6ElPZoByylAlyKverJFZoUBfVXuZEV7/rngtn+I1OfP3qP3C2tb
+        HWDLBAAA
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Cache-Control:
+      - private
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Wed, 14 Aug 2024 18:03:31 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

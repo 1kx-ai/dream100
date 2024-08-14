@@ -1,7 +1,10 @@
-sqlalchemy==1.4.46
-python-dotenv==0.19.2
-psycopg2-binary==2.9.5
-requests==2.26.0
-google-api-python-client==2.86.0
-youtube-transcript-api==0.6.0
-pgvector==0.1.8
+sqlalchemy
+python-dotenv
+psycopg2-binary
+requests
+google-api-python-client
+youtube-transcript-api
+pgvector
+numpy
+FlagEmbedding
+pytest

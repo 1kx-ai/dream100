@@ -1,3 +1,4 @@
+from dream100_cli.renderer import cli_render, cli_input, cli_render_menu, cli_get_choice
 from dream100.services import (
     get_influencer_web_properties,
     get_influencer_youtube_links,
@@ -8,13 +9,20 @@ from dream100.services import (
 
 def services_menu():
     while True:
-        print("\n--- Services ---")
-        print("1. Get Influencer Web Properties")
-        print("2. Get YouTube Links")
-        print("3. Get YouTube Transcripts")
-        print("4. Embed YouTube Transcripts")
-        print("5. Return to main menu")
-        choice = input("Enter your choice: ")
+        cli_render_menu("Services", [
+            "Get Influencer Web Properties",
+            "Get YouTube Links",
+            "Get YouTube Transcripts",
+            "Embed YouTube Transcripts",
+            "Return to main menu"
+        ])
+        choice = cli_get_choice([
+            "Get Influencer Web Properties",
+            "Get YouTube Links",
+            "Get YouTube Transcripts",
+            "Embed YouTube Transcripts",
+            "Return to main menu"
+        ])
 
         if choice == "1":
             run_get_influencer_web_properties()
@@ -27,7 +35,7 @@ def services_menu():
         elif choice == "5":
             break
         else:
-            print("Invalid choice. Please try again.")
+            cli_render("Invalid choice. Please try again.", Fore.YELLOW)
 
 
 def run_get_influencer_web_properties():
@@ -43,7 +51,7 @@ def run_get_youtube_transcripts():
 
 
 def run_embed_youtube_transcripts():
-    batch_size = int(input("Enter batch size (default is 100): ") or 100)
+    batch_size = int(cli_input("Enter batch size (default is 100)") or 100)
     embed_youtube_transcripts(batch_size)
 
 

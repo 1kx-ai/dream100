@@ -1,3 +1,4 @@
+from colorama import Fore
 from dream100_cli.renderer import (
     cli_render, cli_render_menu, cli_get_choice, cli_render_error
 )

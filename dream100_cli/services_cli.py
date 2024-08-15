@@ -1,4 +1,5 @@
 from dream100_cli.renderer import cli_render, cli_input, cli_render_menu, cli_get_choice
+from colorama import Fore
 from dream100.services import (
     get_influencer_web_properties,
     get_influencer_youtube_links,

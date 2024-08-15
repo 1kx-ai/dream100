@@ -1,5 +1,6 @@
 # Ignore .env file containing sensitive information
 .env
+.env.test
 
 # Ignore Python bytecode files
 __pycache__/
@@ -9,3 +10,5 @@ __pycache__/
 venv/
 .aider*
 **/.DS_Store
+.coverage
+*.patch

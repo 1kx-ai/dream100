@@ -6,7 +6,9 @@ from dream100.db_config import create_session
 from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty, WebPropertyType
 from dream100.contents.contents import ContentContext
+import logging
 
+logger = logging.getLogger(__name__)
 
 class GetYoutubeTranscripts:
     def __init__(self, batch_size=None, delay=1):
@@ -43,7 +45,7 @@ class GetYoutubeTranscripts:
             self.last_request_time = time.time()
             return full_transcript
         except Exception as e:
-            print(f"Error fetching transcript for {video_url}: {str(e)}")
+            logger.info(f"Error fetching transcript for {video_url}: {str(e)}")
             return None
 
     def get_and_update_transcripts(self):
@@ -65,7 +67,7 @@ class GetYoutubeTranscripts:
         contents = query.all()
 
         for content in contents:
-            print(f"Processing YouTube content ID: {content.id}, URL: {content.link}")
+            logger.info(f"Processing YouTube content ID: {content.id}, URL: {content.link}")
             transcript = self.get_youtube_transcript(content.link)
 
             if transcript:
@@ -74,18 +76,18 @@ class GetYoutubeTranscripts:
                         content.id, scraped_content=transcript, status=ContentStatus.OK
                     )
                     if updated_content:
-                        print(
+                        logger.info(
                             f"Updated transcript for YouTube content ID: {content.id}"
                         )
                     else:
-                        print(f"Failed to update YouTube content ID: {content.id}")
+                        logger.info(f"Failed to update YouTube content ID: {content.id}")
                 except Exception as e:
-                    print(f"Error updating YouTube content ID: {content.id}: {str(e)}")
+                    logger.info(f"Error updating YouTube content ID: {content.id}: {str(e)}")
                     self.content_context.update_content(
                         content.id, status=ContentStatus.ERROR
                     )
             else:
-                print(
+                logger.info(
                     f"Failed to fetch transcript for YouTube content ID: {content.id}"
                 )
                 self.content_context.update_content(
@@ -93,7 +95,7 @@ class GetYoutubeTranscripts:
                 )
 
         self.session.close()
-        print("YouTube transcript retrieval and update process completed.")
+        logger.info("YouTube transcript retrieval and update process completed.")
 
 
 def get_youtube_transcripts(batch_size=None, delay=1):

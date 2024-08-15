@@ -8,6 +8,9 @@ from dream100.influencers.influencers import InfluencerContext
 from dream100.web_properties.web_properties import WebPropertyContext
 from dream100.models.web_property import WebProperty, WebPropertyType
 from config import config
+import logging
+
+logger = logging.getLogger(__name__)
 
 class InfluencerWebPropertiesService:
     def __init__(self):
@@ -55,7 +58,7 @@ class InfluencerWebPropertiesService:
                     type=WebPropertyType.WEBSITE.value,
                     url=website
                 )
-                print(f"Added website for {influencer.name}: {website}")
+                logger.info(f"Added website for {influencer.name}: {website}")
 
         for platform in ["facebook", "twitter", "youtube", "linkedin"]:
             platform_type = getattr(WebPropertyType, platform.upper())
@@ -67,7 +70,7 @@ class InfluencerWebPropertiesService:
                         type=platform_type.value,
                         url=social_link
                     )
-                    print(f"Added {platform} for {influencer.name}: {social_link}")
+                    logger.info(f"Added {platform} for {influencer.name}: {social_link}")
 
     def get_web_properties(self):
         influencers = self.influencer_context.list_influencers()
@@ -77,18 +80,18 @@ class InfluencerWebPropertiesService:
             if len(existing_properties) < 5:  # 5 is the max (website + 4 social platforms)
                 try:
                     self.find_links(influencer, existing_properties)
-                    print(f"Processed influencer: {influencer.name}")
+                    logger.info(f"Processed influencer: {influencer.name}")
                 except Exception as e:
-                    print(f"Error processing influencer {influencer.name}: {str(e)}")
+                    logger.info(f"Error processing influencer {influencer.name}: {str(e)}")
                     self.session.rollback()
                     continue
                 # Add a delay to avoid hitting API rate limits
                 time.sleep(1)
             else:
-                print(f"Skipping {influencer.name}: All web properties already exist")
+                logger.info(f"Skipping {influencer.name}: All web properties already exist")
 
         self.session.close()
-        print("Processing complete.")
+        logger.info("Processing complete.")
 
 def get_influencer_web_properties():
     service = InfluencerWebPropertiesService()

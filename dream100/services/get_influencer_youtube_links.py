@@ -8,6 +8,9 @@ from dream100.web_properties import WebPropertyContext
 from dream100.contents.contents import ContentContext
 from dream100.models.web_property import WebPropertyType
 from config import config
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class GetYouTubeLinksService:
@@ -42,7 +45,7 @@ class GetYouTubeLinksService:
     def get_channel_videos(self, channel_url):
         channel_id = self.get_channel_id_from_url(channel_url)
         if not channel_id:
-            print(f"Invalid channel URL or unable to find channel ID: {channel_url}")
+            logger.info(f"Invalid channel URL or unable to find channel ID: {channel_url}")
             return []
 
         video_links = []
@@ -70,7 +73,7 @@ class GetYouTubeLinksService:
         ]
 
         for web_property in youtube_properties:
-            print(
+            logger.info(
                 f"Processing YouTube channel for influencer ID {web_property.influencer_id}..."
             )
             youtube_videos = self.get_channel_videos(web_property.url)
@@ -86,17 +89,17 @@ class GetYouTubeLinksService:
                         self.content_context.create_content(
                             web_property_id=web_property.id, link=video_link
                         )
-                print(
+                logger.info(
                     f"Found {len(youtube_videos)} videos for influencer ID {web_property.influencer_id}"
                 )
             else:
-                print(f"No videos found for influencer ID {web_property.influencer_id}")
+                logger.info(f"No videos found for influencer ID {web_property.influencer_id}")
 
             # Add a delay to avoid hitting rate limits
             time.sleep(1)
 
         self.session.close()
-        print("Processing complete.")
+        logger.info("Processing complete.")
 
 
 def get_influencer_youtube_links():

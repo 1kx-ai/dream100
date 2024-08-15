@@ -7,6 +7,10 @@ class ProjectBase(BaseModel):
 class ProjectCreate(ProjectBase):
     pass
 
+class ProjectUpdate(ProjectBase):
+    name: str = None
+    description: str = None
+
 class Project(ProjectBase):
     id: int
 

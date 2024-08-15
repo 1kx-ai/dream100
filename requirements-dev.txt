@@ -1,0 +1,8 @@
+pytest
+vcrpy
+pytest-cov
+pytest-env
+python-dotenv
+
+# Production dependencies
+-r requirements.txt

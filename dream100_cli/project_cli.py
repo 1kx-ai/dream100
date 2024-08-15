@@ -1,11 +1,11 @@
-# main_cli.py
+from colorama import Fore
 
 from dream100_cli.project_cli import project_menu
 from dream100_cli.influencer_cli import influencer_menu
 from dream100_cli.web_property_cli import web_property_menu
 from dream100_cli.content_cli import content_menu
 from dream100_cli.services_cli import services_menu
-from cli_utils import (
+from dream100_cli.renderer import (
     cli_render, cli_render_menu, cli_get_choice, cli_render_error
 )
 import logging
@@ -45,12 +45,12 @@ def main_menu(
         elif choice == 5:
             services_menu()
         elif choice == 6:
-            cli_render("Exiting the application...")
+            cli_render("Exiting the application...", Fore.CYAN)
             break
         else:
             cli_render_error("Invalid choice. Please try again.")
 
-    logger.info("Application exited")
+    cli_render("Application exited", Fore.CYAN)
 
 if __name__ == "__main__":
     # Here you would initialize your contexts and pass them to main_menu

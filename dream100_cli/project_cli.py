@@ -1,6 +1,6 @@
 from colorama import Fore
 from dream100_cli.renderer import (
-    cli_render, cli_render_menu, cli_get_choice, cli_render_error
+    cli_render, cli_render_menu, cli_get_choice, cli_render_error, cli_input
 )
 import logging
 
@@ -39,21 +39,41 @@ def project_menu(project_context):
 
     cli_render("Returning to main menu...", Fore.CYAN)
 
+
 def create_project(project_context):
-    cli_render("Creating a new project...", Fore.CYAN)
-    # Implementation for creating a project
+    name = cli_input("Enter project name: ")
+    description = cli_input("Enter project description: ")
+    project = project_context.create_project(name, description)
+    print(f"Project created: {project}")
+
 
 def list_projects(project_context):
-    cli_render("Listing all projects...", Fore.CYAN)
-    # Implementation for listing projects
+    projects = project_context.list_projects()
+    for project in projects:
+        print(
+            f"ID: {project.id}, Name: {project.name}, Description: {project.description}"
+        )
+
 
 def update_project(project_context):
-    cli_render("Updating a project...", Fore.CYAN)
-    # Implementation for updating a project
+    project_id = int(cli_input("Enter project ID to update: "))
+    name = cli_input("Enter new name (press enter to keep current): ")
+    description = cli_input("Enter new description (press enter to keep current): ")
+    project = project_context.update_project(
+        project_id, name or None, description or None
+    )
+    if project:
+        print(f"Project updated: {project}")
+    else:
+        print("Project not found.")
+
 
 def delete_project(project_context):
-    cli_render("Deleting a project...", Fore.CYAN)
-    # Implementation for deleting a project
+    project_id = int(cli_input("Enter project ID to delete: "))
+    if project_context.delete_project(project_id):
+        print("Project deleted successfully.")
+    else:
+        print("Project not found or could not be deleted.")
 
 if __name__ == "__main__":
     # Here you would initialize your contexts and pass them to project_menu

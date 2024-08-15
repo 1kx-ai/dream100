@@ -7,12 +7,6 @@ from dream100_api.schemas.project import Project, ProjectCreate, ProjectUpdate
 
 router = APIRouter()
 
-def get_db():
-    db, _ = create_session()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.get("/projects", response_model=list[Project]) 
 async def list_projects(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):

@@ -30,3 +30,9 @@ def create_session():
 def init_db(engine):
     """Initialize the database by creating all tables"""
     Base.metadata.create_all(engine)
+def get_db():
+    db, _ = create_session()
+    try:
+        yield db
+    finally:
+        db.close()

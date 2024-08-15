@@ -7,14 +7,12 @@ from dream100.db_config import create_session
 from dream100.influencers.influencers import InfluencerContext
 from dream100.web_properties.web_properties import WebPropertyContext
 from dream100.models.web_property import WebProperty, WebPropertyType
-
-# Load environment variables
-load_dotenv()
+from config import config
 
 class InfluencerWebPropertiesService:
     def __init__(self):
-        self.api_key = os.getenv('GOOGLE_API_KEY')
-        self.cx = os.getenv('GOOGLE_SEARCH_ENGINE_ID')
+        self.api_key = config.GOOGLE_API_KEY
+        self.cx = config.GOOGLE_SEARCH_ENGINE_ID
         if not self.api_key or not self.cx:
             raise ValueError("Please set valid GOOGLE_API_KEY and GOOGLE_SEARCH_ENGINE_ID in your .env file")
 

@@ -7,14 +7,12 @@ from dream100.db_config import create_session
 from dream100.web_properties import WebPropertyContext
 from dream100.contents.contents import ContentContext
 from dream100.models.web_property import WebPropertyType
-
-# Load environment variables
-load_dotenv()
+from config import config
 
 
 class GetYouTubeLinksService:
     def __init__(self):
-        self.api_key = os.getenv("GOOGLE_API_KEY")
+        self.api_key = config.GOOGLE_API_KEY
         if not self.api_key:
             raise ValueError("Please set a valid GOOGLE_API_KEY in your .env file")
 

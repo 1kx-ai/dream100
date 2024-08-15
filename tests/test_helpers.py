@@ -5,9 +5,6 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 from dream100.db_config import Base
 
-# Load environment variables
-load_dotenv()
-
 # Use a separate test database
 TEST_DATABASE_URL = f"postgresql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/dream100_test"
 

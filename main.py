@@ -8,9 +8,6 @@ from dream100.contents.contents import ContentContext
 from dream100_cli.main_cli import main_menu
 from sqlalchemy import inspect
 
-load_dotenv()
-
-
 def revert_database(session, engine):
     inspector = inspect(engine)
 

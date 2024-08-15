@@ -6,6 +6,8 @@ from dream100_api.main import app
 from dream100_api.auth.bearer_auth import BearerAuth
 from dream100_api.auth.middleware import AuthMiddleware
 from dotenv import load_dotenv
+from config import config
+
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -23,8 +25,8 @@ def client():
     return get_test_client()
 
 def test_projects_route_with_valid_token(client):
-    test_api_key = os.getenv("TEST_API_KEY")
-    assert test_api_key, "TEST_API_KEY not set in .env.test file"
+    test_api_key = config.TEST_API_KEY
+    assert test_api_key, "TEST_API_KEY not set in .env file"
     logger.debug(f"Using TEST_API_KEY: {test_api_key}")
     headers = {"Authorization": f"Bearer {test_api_key}"}
     response = client.get("/projects", headers=headers)

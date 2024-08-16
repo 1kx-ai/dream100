@@ -1,4 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import joinedload
 from dream100.models.influencer import Influencer
 from dream100.models.project import Project
 
@@ -10,19 +11,23 @@ class InfluencerContext:
     def create_influencer(self, name, project_ids):
         influencer = Influencer(name=name)
         try:
-            projects = (
-                self.session.query(Project).filter(Project.id.in_(project_ids)).all()
-            )
+            projects = self.session.query(Project).filter(Project.id.in_(project_ids)).all()
             influencer.projects = projects
             self.session.add(influencer)
             self.session.commit()
+            self.session.refresh(influencer)
             return influencer
         except SQLAlchemyError as e:
             self.session.rollback()
             raise e
 
     def get_influencer(self, influencer_id):
-        return self.session.get(Influencer, influencer_id)
+        return (
+            self.session.query(Influencer)
+            .options(joinedload(Influencer.projects))
+            .filter(Influencer.id == influencer_id)
+            .first()
+        )
 
     def update_influencer(self, influencer_id, name=None, project_ids=None):
         influencer = self.get_influencer(influencer_id)
@@ -57,7 +62,11 @@ class InfluencerContext:
         return False
 
     def list_influencers(self):
-        return self.session.query(Influencer).all()
+        return (
+            self.session.query(Influencer)
+            .options(joinedload(Influencer.projects))
+            .all()
+        )
 
     def get_influencer_projects(self, influencer_id):
         influencer = self.get_influencer(influencer_id)

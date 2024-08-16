@@ -5,6 +5,7 @@ from dream100.db_config import Base, get_db, init_db
 from dream100_api.main import app
 from fastapi.testclient import TestClient
 from config import config
+from dream100.models.project import Project
 
 
 @pytest.fixture(scope="function")
@@ -54,3 +55,26 @@ def auth_headers():
     assert API_KEY, "API_KEY not set in .env file"
     headers = {"Authorization": f"Bearer {API_KEY}"}
     return headers
+
+
+@pytest.fixture(scope="function")
+def create_project(db_session):
+    def _create_project(name="Test Project", description="Test Description"):
+        project = Project(name=name, description=description)
+        db_session.add(project)
+        db_session.commit()
+        db_session.refresh(project)
+        return project
+
+    return _create_project
+
+
+@pytest.fixture(scope="function")
+def create_projects(create_project):
+    def _create_projects(count=2):
+        return [
+            create_project(f"Project {i}", f"Description {i}")
+            for i in range(1, count + 1)
+        ]
+
+    return _create_projects

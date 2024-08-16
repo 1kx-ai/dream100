@@ -3,6 +3,7 @@ from sqlalchemy import select, func
 from dream100.models.content_embedding import ContentEmbedding
 from dream100.models.content import Content
 
+
 class ContentEmbeddingContext:
     def __init__(self, session):
         self.session = session
@@ -10,9 +11,7 @@ class ContentEmbeddingContext:
     def create_embedding(self, content_id, chunk_text, embedding):
         try:
             content_embedding = ContentEmbedding(
-                content_id=content_id,
-                chunk_text=chunk_text,
-                embedding=embedding
+                content_id=content_id, chunk_text=chunk_text, embedding=embedding
             )
             self.session.add(content_embedding)
             self.session.commit()
@@ -38,7 +37,13 @@ class ContentEmbeddingContext:
 
     def search_similar_content(self, query_embedding, limit=5):
         stmt = (
-            select(ContentEmbedding, Content.link, ContentEmbedding.embedding.cosine_distance(query_embedding).label('distance'))
+            select(
+                ContentEmbedding,
+                Content.link,
+                ContentEmbedding.embedding.cosine_distance(query_embedding).label(
+                    "distance"
+                ),
+            )
             .join(Content)
             .order_by(ContentEmbedding.embedding.cosine_distance(query_embedding))
             .limit(limit)
@@ -73,12 +78,6 @@ class ContentEmbeddingContext:
 
     def get_embedding_count(self, content_id=None):
         stmt = select(func.count()).select_from(ContentEmbedding)
-        if content_id is not None:
-            stmt = stmt.filter_by(content_id=content_id)
-        return self.session.scalar(stmt)
-
-    def get_average_embedding(self, content_id=None):
-        stmt = select(func.avg(ContentEmbedding.embedding))
         if content_id is not None:
             stmt = stmt.filter_by(content_id=content_id)
         return self.session.scalar(stmt)

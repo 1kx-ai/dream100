@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from config import config
 from dream100.models.project import Project
 from dream100.models.influencer import Influencer
+from dream100.models.web_property import WebProperty, WebPropertyType
 
 
 @pytest.fixture(scope="function")
@@ -79,13 +80,27 @@ def create_projects(create_project):
         ]
 
     return _create_projects
+
+
 @pytest.fixture(scope="function")
 def create_influencer(db_session):
+    def _create_influencer(name="Test Influencer"):
+        influencer = Influencer(name=name)
+        db_session.add(influencer)
+        db_session.commit()
+        db_session.refresh(influencer)
+        return influencer
+
+    return _create_influencer
+
 
 @pytest.fixture(scope="function")
 def create_web_property(db_session, create_influencer):
     def _create_web_property(
-        influencer_id=None, type="YOUTUBE", url="https://www.youtube.com/testchannel", followers=None
+        influencer_id=None,
+        type="YOUTUBE",
+        url="https://www.youtube.com/testchannel",
+        followers=None,
     ):
         if not influencer_id:
             influencer = create_influencer()
@@ -102,11 +117,3 @@ def create_web_property(db_session, create_influencer):
         return web_property
 
     return _create_web_property
-    def _create_influencer(name="Test Influencer"):
-        influencer = Influencer(name=name)
-        db_session.add(influencer)
-        db_session.commit()
-        db_session.refresh(influencer)
-        return influencer
-
-    return _create_influencer

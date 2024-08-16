@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from dream100.db_config import get_db
-from dream100_api.auth.bearer_auth import get_current_user
+from dream100_api.auth.dependencies import get_current_user
 from dream100.web_properties.web_properties import WebPropertyContext
 from dream100_api.schemas.web_property import (
     WebProperty,

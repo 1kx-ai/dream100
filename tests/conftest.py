@@ -81,6 +81,27 @@ def create_projects(create_project):
     return _create_projects
 @pytest.fixture(scope="function")
 def create_influencer(db_session):
+
+@pytest.fixture(scope="function")
+def create_web_property(db_session, create_influencer):
+    def _create_web_property(
+        influencer_id=None, type="YOUTUBE", url="https://www.youtube.com/testchannel", followers=None
+    ):
+        if not influencer_id:
+            influencer = create_influencer()
+            influencer_id = influencer.id
+        web_property = WebProperty(
+            influencer_id=influencer_id,
+            type=WebPropertyType(type),
+            url=url,
+            followers=followers,
+        )
+        db_session.add(web_property)
+        db_session.commit()
+        db_session.refresh(web_property)
+        return web_property
+
+    return _create_web_property
     def _create_influencer(name="Test Influencer"):
         influencer = Influencer(name=name)
         db_session.add(influencer)

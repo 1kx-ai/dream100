@@ -3,14 +3,23 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from dream100.db_config import get_db
+from dream100_api.auth.bearer_auth import get_current_user
 from dream100.web_properties.web_properties import WebPropertyContext
-from dream100_api.schemas.web_property import WebProperty, WebPropertyCreate, WebPropertyUpdate
+from dream100_api.schemas.web_property import (
+    WebProperty,
+    WebPropertyCreate,
+    WebPropertyUpdate,
+)
 
 router = APIRouter()
 
-@router.post("/web_properties", response_model=WebProperty, status_code=status.HTTP_201_CREATED)
+
+@router.post(
+    "/web_properties", response_model=WebProperty, status_code=status.HTTP_201_CREATED
+)
 async def create_web_property(
     web_property: WebPropertyCreate,
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)
@@ -25,9 +34,11 @@ async def create_web_property(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
 @router.get("/web_properties/{web_property_id}", response_model=WebProperty)
 async def get_web_property(
     web_property_id: int,
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)
@@ -36,10 +47,12 @@ async def get_web_property(
         raise HTTPException(status_code=404, detail="Web property not found")
     return web_property
 
+
 @router.put("/web_properties/{web_property_id}", response_model=WebProperty)
 async def update_web_property(
     web_property_id: int,
     web_property: WebPropertyUpdate,
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)
@@ -53,9 +66,13 @@ async def update_web_property(
         raise HTTPException(status_code=404, detail="Web property not found")
     return updated_web_property
 
-@router.delete("/web_properties/{web_property_id}", status_code=status.HTTP_204_NO_CONTENT)
+
+@router.delete(
+    "/web_properties/{web_property_id}", status_code=status.HTTP_204_NO_CONTENT
+)
 async def delete_web_property(
     web_property_id: int,
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)
@@ -63,9 +80,11 @@ async def delete_web_property(
         raise HTTPException(status_code=404, detail="Web property not found")
     return
 
+
 @router.get("/web_properties", response_model=List[WebProperty])
 async def list_web_properties(
     influencer_id: int = None,
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)

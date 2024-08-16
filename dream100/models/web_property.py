@@ -36,4 +36,4 @@ class WebProperty(Base):
     contents = relationship("Content", back_populates="web_property")
 
     def __repr__(self):
-        return f"<WebProperty(id={self.id}, name='{self.name}', url='{self.url}')>"
+        return f"<WebProperty(id={self.id}, type={self.type},  url='{self.url}')>"

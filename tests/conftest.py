@@ -98,9 +98,9 @@ def create_influencer(db_session):
 def create_web_property(db_session, create_influencer):
     def _create_web_property(
         influencer_id=None,
-        type="YOUTUBE",
+        type="youtube",
         url="https://www.youtube.com/testchannel",
-        followers=None,
+        followers=1000,
     ):
         if not influencer_id:
             influencer = create_influencer()

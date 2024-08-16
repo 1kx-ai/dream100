@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class InfluencerWebPropertiesService:
-    def __init__(self):
+    def __init__(self, session):
         self.api_key = config.GOOGLE_API_KEY
         self.cx = config.GOOGLE_SEARCH_ENGINE_ID
         if not self.api_key or not self.cx:
@@ -22,7 +22,7 @@ class InfluencerWebPropertiesService:
                 "Please set valid GOOGLE_API_KEY and GOOGLE_SEARCH_ENGINE_ID in your .env file"
             )
 
-        self.session, _ = create_session()
+        self.session = session
         self.influencer_context = InfluencerContext(self.session)
         self.web_property_context = WebPropertyContext(self.session)
 
@@ -109,8 +109,8 @@ class InfluencerWebPropertiesService:
         logger.info("Processing complete.")
 
 
-def get_influencer_web_properties():
-    service = InfluencerWebPropertiesService()
+def get_influencer_web_properties(session):
+    service = InfluencerWebPropertiesService(session)
     service.get_web_properties()
 
 

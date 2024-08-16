@@ -5,13 +5,17 @@ from dream100.db_config import Base, get_db, init_db
 from dream100_api.main import app
 from fastapi.testclient import TestClient
 from config import config
+from dream100.services.get_influencer_web_properties import get_influencer_web_properties
 from dream100.models.project import Project
 from dream100.models.influencer import Influencer
 from dream100.models.web_property import WebProperty, WebPropertyType
 from dream100.models.content import Content, ContentStatus
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
+def influencer_web_properties_service(db_session):
+    return get_influencer_web_properties(db_session)
+
 def db_engine():
     SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
     engine = create_engine(

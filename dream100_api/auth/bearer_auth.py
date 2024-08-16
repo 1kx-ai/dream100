@@ -2,13 +2,15 @@ import os
 import logging
 from fastapi import HTTPException, Request
 from .auth_provider import AuthProvider
+from config import config
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 class BearerAuth(AuthProvider):
     def __init__(self):
-        self.api_keys = {os.getenv("TEST_API_KEY", "default-test-key"): "admin"}
+        self.api_keys = {config.API_KEY: "admin"}
         logger.debug(f"Initialized BearerAuth with API keys: {self.api_keys}")
 
     async def authenticate(self, request: Request) -> dict:
@@ -19,6 +21,7 @@ class BearerAuth(AuthProvider):
             raise HTTPException(status_code=401, detail="Invalid authorization header")
         token = auth_header.split()[1]
         logger.debug(f"Extracted token: {token}")
+        print(self.api_keys)
         if token in self.api_keys:
             logger.debug("Valid token found")
             return {"user_id": token, "role": self.api_keys[token]}

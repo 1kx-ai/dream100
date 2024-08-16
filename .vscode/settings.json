@@ -1,7 +1,11 @@
 {
   "cSpell.words": [
+    "autoflush",
+    "autouse",
     "dotenv",
+    "fastapi",
     "influencers",
+    "pydantic",
     "sessionmaker",
     "sqlalchemy"
   ]

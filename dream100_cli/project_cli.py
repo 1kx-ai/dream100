@@ -44,13 +44,13 @@ def create_project(project_context):
     name = cli_input("Enter project name: ")
     description = cli_input("Enter project description: ")
     project = project_context.create_project(name, description)
-    print(f"Project created: {project}")
+    cli_render(f"Project created: {project}")
 
 
 def list_projects(project_context):
     projects = project_context.list_projects()
     for project in projects:
-        print(
+        cli_render(
             f"ID: {project.id}, Name: {project.name}, Description: {project.description}"
         )
 
@@ -63,17 +63,17 @@ def update_project(project_context):
         project_id, name or None, description or None
     )
     if project:
-        print(f"Project updated: {project}")
+        cli_render(f"Project updated: {project}")
     else:
-        print("Project not found.")
+        cli_render("Project not found.")
 
 
 def delete_project(project_context):
     project_id = int(cli_input("Enter project ID to delete: "))
     if project_context.delete_project(project_id):
-        print("Project deleted successfully.")
+        cli_render("Project deleted successfully.")
     else:
-        print("Project not found or could not be deleted.")
+        cli_render("Project not found or could not be deleted.")
 
 if __name__ == "__main__":
     # Here you would initialize your contexts and pass them to project_menu

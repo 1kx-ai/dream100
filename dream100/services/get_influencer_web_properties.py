@@ -14,7 +14,13 @@ logger = logging.getLogger(__name__)
 
 
 class InfluencerWebPropertiesService:
-    def __init__(self, session):
+    def __init__(self, session=None):
+        if session is None:
+            self.session, _ = create_session()
+            self.should_close_session = True
+        else:
+            self.session = session
+            self.should_close_session = False
         self.api_key = config.GOOGLE_API_KEY
         self.cx = config.GOOGLE_SEARCH_ENGINE_ID
         if not self.api_key or not self.cx:
@@ -105,7 +111,8 @@ class InfluencerWebPropertiesService:
                     f"Skipping {influencer.name}: All web properties already exist"
                 )
 
-        self.session.close()
+        if self.should_close_session:
+            self.session.close()
         logger.info("Processing complete.")
 
 

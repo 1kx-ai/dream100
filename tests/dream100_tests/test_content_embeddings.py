@@ -1,6 +1,6 @@
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
-from dream100.content_embeddings.content_embeddings import ContentEmbeddingContext
+from dream100.context.content_embeddings import ContentEmbeddingContext
 from dream100.models.content_embedding import ContentEmbedding
 from test_helpers import create_float_array
 import numpy as np

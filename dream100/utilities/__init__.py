@@ -1,4 +1,3 @@
-from .content_embeddings import ContentEmbeddingContext
 from .embedding_utils import (
     create_embedding,
     create_corpus_embedding,

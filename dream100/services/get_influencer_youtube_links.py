@@ -2,10 +2,9 @@ import os
 from googleapiclient.discovery import build
 from urllib.parse import urlparse
 import time
-from dotenv import load_dotenv
 from dream100.db_config import create_session
-from dream100.web_properties import WebPropertyContext
-from dream100.contents.contents import ContentContext
+from dream100.context.web_properties import WebPropertyContext
+from dream100.context.contents import ContentContext
 from dream100.models.web_property import WebPropertyType
 from config import config
 import logging
@@ -31,13 +30,21 @@ class GetYouTubeLinksService:
                 return parsed_url.path.split("/")[-1]
             elif parsed_url.path.startswith("/user/"):
                 username = parsed_url.path.split("/")[-1]
-                response = self.youtube.channels().list(part="id", forUsername=username).execute()
+                response = (
+                    self.youtube.channels()
+                    .list(part="id", forUsername=username)
+                    .execute()
+                )
                 if "items" in response:
                     return response["items"][0]["id"]
             elif parsed_url.path.startswith("/c/") or parsed_url.path.startswith("/@"):
                 # Handle both /c/ and /@ URLs
                 custom_name = parsed_url.path.split("/")[-1]
-                response = self.youtube.search().list(part="id", q=custom_name, type="channel").execute()
+                response = (
+                    self.youtube.search()
+                    .list(part="id", q=custom_name, type="channel")
+                    .execute()
+                )
                 if "items" in response:
                     return response["items"][0]["id"]["channelId"]
         return None
@@ -45,7 +52,9 @@ class GetYouTubeLinksService:
     def get_channel_videos(self, channel_url):
         channel_id = self.get_channel_id_from_url(channel_url)
         if not channel_id:
-            logger.info(f"Invalid channel URL or unable to find channel ID: {channel_url}")
+            logger.info(
+                f"Invalid channel URL or unable to find channel ID: {channel_url}"
+            )
             return []
 
         video_links = []
@@ -93,7 +102,9 @@ class GetYouTubeLinksService:
                     f"Found {len(youtube_videos)} videos for influencer ID {web_property.influencer_id}"
                 )
             else:
-                logger.info(f"No videos found for influencer ID {web_property.influencer_id}")
+                logger.info(
+                    f"No videos found for influencer ID {web_property.influencer_id}"
+                )
 
             # Add a delay to avoid hitting rate limits
             time.sleep(1)

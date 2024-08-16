@@ -1,5 +1,5 @@
 import pytest
-from dream100.web_properties.web_properties import WebPropertyContext
+from dream100.context.web_properties import WebPropertyContext
 from dream100.models.web_property import WebProperty, WebPropertyType
 from dream100.models.influencer import Influencer
 

@@ -1,5 +1,5 @@
 import pytest
-from dream100.contents.contents import ContentContext
+from dream100.context.contents import ContentContext
 from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty, WebPropertyType
 

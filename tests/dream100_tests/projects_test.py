@@ -1,5 +1,5 @@
 import pytest
-from dream100.projects.projects import ProjectContext
+from dream100.context.projects import ProjectContext
 
 
 @pytest.fixture

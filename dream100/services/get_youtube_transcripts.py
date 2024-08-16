@@ -5,10 +5,11 @@ from urllib.parse import urlparse, parse_qs
 from dream100.db_config import create_session
 from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty, WebPropertyType
-from dream100.contents.contents import ContentContext
+from dream100.context.contents import ContentContext
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class GetYoutubeTranscripts:
     def __init__(self, batch_size=None, delay=1):
@@ -67,7 +68,9 @@ class GetYoutubeTranscripts:
         contents = query.all()
 
         for content in contents:
-            logger.info(f"Processing YouTube content ID: {content.id}, URL: {content.link}")
+            logger.info(
+                f"Processing YouTube content ID: {content.id}, URL: {content.link}"
+            )
             transcript = self.get_youtube_transcript(content.link)
 
             if transcript:
@@ -80,9 +83,13 @@ class GetYoutubeTranscripts:
                             f"Updated transcript for YouTube content ID: {content.id}"
                         )
                     else:
-                        logger.info(f"Failed to update YouTube content ID: {content.id}")
+                        logger.info(
+                            f"Failed to update YouTube content ID: {content.id}"
+                        )
                 except Exception as e:
-                    logger.info(f"Error updating YouTube content ID: {content.id}: {str(e)}")
+                    logger.info(
+                        f"Error updating YouTube content ID: {content.id}: {str(e)}"
+                    )
                     self.content_context.update_content(
                         content.id, status=ContentStatus.ERROR
                     )

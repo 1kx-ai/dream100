@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from dream100.db_config import create_session, get_db
-from dream100.projects.projects import ProjectContext
+from dream100.context.projects import ProjectContext
 from dream100_api.auth.dependencies import get_current_user
 from dream100_api.schemas.project import Project, ProjectCreate, ProjectUpdate
 

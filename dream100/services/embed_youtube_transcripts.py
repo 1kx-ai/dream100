@@ -1,15 +1,19 @@
 from dream100.db_config import create_session
 from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty, WebPropertyType
-from dream100.contents.contents import ContentContext
-from dream100.content_embeddings import ContentEmbeddingContext
-from dream100.content_embeddings.embedding_utils import chunk_content, batch_create_embeddings
+from dream100.context.contents import ContentContext
+from dream100.context.content_embeddings import ContentEmbeddingContext
+from dream100.utilities.embedding_utils import (
+    chunk_content,
+    batch_create_embeddings,
+)
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class EmbedYoutubeTranscripts:
     def __init__(self, batch_size=100):
@@ -27,16 +31,20 @@ class EmbedYoutubeTranscripts:
                 .filter(
                     WebProperty.type == WebPropertyType.YOUTUBE,
                     Content.status == ContentStatus.OK,
-                    Content.scraped_content.isnot(None)
+                    Content.scraped_content.isnot(None),
                 )
                 .options(joinedload(Content.web_property))
             )
 
-            total_count = self.session.scalar(select(func.count()).select_from(stmt.subquery()))
+            total_count = self.session.scalar(
+                select(func.count()).select_from(stmt.subquery())
+            )
             logger.info(f"Found {total_count} YouTube transcripts to process")
 
             for i in range(0, total_count, self.batch_size):
-                batch = self.session.scalars(stmt.offset(i).limit(self.batch_size)).all()
+                batch = self.session.scalars(
+                    stmt.offset(i).limit(self.batch_size)
+                ).all()
                 self.process_batch(batch)
                 logger.info(f"Processed batch {i // self.batch_size + 1}")
 
@@ -59,18 +67,26 @@ class EmbedYoutubeTranscripts:
                 embeddings = batch_create_embeddings(chunks)
 
                 for chunk, embedding in zip(chunks, embeddings):
-                    self.embedding_context.create_embedding(content.id, chunk, embedding)
+                    self.embedding_context.create_embedding(
+                        content.id, chunk, embedding
+                    )
 
-                logger.info(f"Processed YouTube content ID: {content.id}, URL: {content.link}")
+                logger.info(
+                    f"Processed YouTube content ID: {content.id}, URL: {content.link}"
+                )
 
             except Exception as e:
-                logger.error(f"Error processing YouTube content ID: {content.id}: {str(e)}")
+                logger.error(
+                    f"Error processing YouTube content ID: {content.id}: {str(e)}"
+                )
                 self.session.rollback()
                 continue
+
 
 def embed_youtube_transcripts(batch_size=100):
     service = EmbedYoutubeTranscripts(batch_size)
     service.process_transcripts()
+
 
 if __name__ == "__main__":
     embed_youtube_transcripts()

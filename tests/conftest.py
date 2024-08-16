@@ -8,6 +8,7 @@ from config import config
 from dream100.models.project import Project
 from dream100.models.influencer import Influencer
 from dream100.models.web_property import WebProperty, WebPropertyType
+from dream100.models.content import Content, ContentStatus
 
 
 @pytest.fixture(scope="function")
@@ -117,3 +118,30 @@ def create_web_property(db_session, create_influencer):
         return web_property
 
     return _create_web_property
+
+
+@pytest.fixture(scope="function")
+def create_content(db_session, create_web_property):
+    def _create_content(
+        web_property_id=None,
+        link="https://www.example.com",
+        scraped_content="Sample content",
+        views=0,
+        status=ContentStatus.NONE,
+    ):
+        if not web_property_id:
+            web_property = create_web_property()
+            web_property_id = web_property.id
+        content = Content(
+            web_property_id=web_property_id,
+            link=link,
+            scraped_content=scraped_content,
+            views=views,
+            status=status,
+        )
+        db_session.add(content)
+        db_session.commit()
+        db_session.refresh(content)
+        return content
+
+    return _create_content

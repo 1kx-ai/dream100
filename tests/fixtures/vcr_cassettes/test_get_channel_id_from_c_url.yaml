@@ -1,0 +1,57 @@
+interactions:
+- request:
+    body: null
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '0'
+      user-agent:
+      - (gzip)
+      x-goog-api-client:
+      - gdcl/2.140.0 gl-python/3.10.2
+    method: GET
+    uri: https://youtube.googleapis.com/youtube/v3/search?part=id&q=Computerphile&type=channel&key=AIzaSyDfJMbk8UalElj9dM0uXScN6HZGbcaoIwA&alt=json
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/62R0W6iQBSG730Kw95KIq4g7B1SymJVQKAImw0BGWEEBhyGoG189wVpu0nTvVpu
+        ZjL/+eac+TKvo/GYSiGKqB9j6lrUpA7BtwoE+JCsYUV2oCoLVAFq0nGABHHHGUHsNeGzUjOuewrh
+        1s8EeE5hKW3UHkTgQvQgBlaRAtTdkETbEMW+iEEMCyQVEegrfVq2uIqORZu9tuc2IQUJsvYBdUaq
+        Np0x7KQv4D7TAe5mtCW2zW/3LpCAvIN/3cm+0T8F+97U5J161+Mv05Bp0hKYXN64Bq97u4cHIRIU
+        ufgLw+jjpV+OOCQBQiD7uNAib5F652xJoK80d6hq1lHymaAuVrApkUi98bf7fpv8jwjw1+SFYc3w
+        qnFTkewRBI81VPcbXA0pYjvW4pQsn3ykb+YLT3xsZPqpGVKEVU/iMoziONyZZWDK5WG9Xm6VOfaM
+        IUWWAccKhiOnjKjOrZimc7yaDfojp0VeKXFhyfhse1gPeS0v1Z/aEfr8kCIbjg4qi01DOnE4mTgM
+        ToNo0B+5aLytMS9JAx3T3Am2O92vpk7sZmk8pAjzHdnM+brdzqqjLmFZA+Wz/1mkXX+PbqM/D77l
+        H8sEAAA=
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Cache-Control:
+      - private
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 16 Aug 2024 19:15:28 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

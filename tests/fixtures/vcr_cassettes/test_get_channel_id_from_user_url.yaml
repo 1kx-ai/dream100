@@ -1,0 +1,52 @@
+interactions:
+- request:
+    body: null
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '0'
+      user-agent:
+      - (gzip)
+      x-goog-api-client:
+      - gdcl/2.140.0 gl-python/3.10.2
+    method: GET
+    uri: https://youtube.googleapis.com/youtube/v3/channels?part=id&forUsername=Computerphile&key=AIzaSyDfJMbk8UalElj9dM0uXScN6HZGbcaoIwA&alt=json
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/3WOwQqCQBCG7z6FbFeFMrS2m0RFklRCFkWHraZa1FXaNbHw3RuV6NRlYL755ud/
+        a7pOIi4uZKSTMs1VfoLO+c6EgHjBpQpAZqmQQIxaBMVutQjBDvqW75fmutyvC29yt5Y8fF0o7bZi
+        xm4wF9cU5TfuSFSqWIxpeawk0p7R4kdLVvBY4QsebORVk8EVJLV6aMw25n9ZYnyFb8lnmLyoqyLJ
+        xsOlE0fTcBrwZ8FmweYn8yZrM6ZmaTpnmdvbWWLR+cDjRSZc0mgVzqNWaR94f+xkLAEAAA==
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Cache-Control:
+      - private
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 16 Aug 2024 19:12:04 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -13,13 +13,20 @@ logger = logging.getLogger(__name__)
 
 
 class GetYouTubeLinksService:
-    def __init__(self):
+    def __init__(self, session=None):
         self.api_key = config.GOOGLE_API_KEY
         if not self.api_key:
             raise ValueError("Please set a valid GOOGLE_API_KEY in your .env file")
 
         self.youtube = build("youtube", "v3", developerKey=self.api_key)
-        self.session, _ = create_session()
+
+        if session:
+            self.session = session
+            self.should_close_session = False
+        else:
+            self.session, _ = create_session()
+            self.should_close_session = True
+
         self.web_property_context = WebPropertyContext(self.session)
         self.content_context = ContentContext(self.session)
 
@@ -109,12 +116,13 @@ class GetYouTubeLinksService:
             # Add a delay to avoid hitting rate limits
             time.sleep(1)
 
-        self.session.close()
+        if self.should_close_session:
+            self.session.close()
         logger.info("Processing complete.")
 
 
-def get_influencer_youtube_links():
-    service = GetYouTubeLinksService()
+def get_influencer_youtube_links(session=None):
+    service = GetYouTubeLinksService(session)
     service.process_youtube_links()
 
 

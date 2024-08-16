@@ -1,0 +1,69 @@
+interactions:
+- request:
+    body: null
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-length:
+      - '0'
+      user-agent:
+      - (gzip)
+      x-goog-api-client:
+      - gdcl/2.140.0 gl-python/3.10.2
+    method: GET
+    uri: https://youtube.googleapis.com/youtube/v3/search?part=id%2Csnippet&channelId=UCa-vrCLQHviTOVnEKDOdetQ&maxResults=50&type=video&key=AIzaSyDfJMbk8UalElj9dM0uXScN6HZGbcaoIwA&alt=json
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/92XXWvjRhSG7/MrhHsbJ5L87Tt/JXFs11GiOE5KCbI11owlzyjSyB9ZAr1Ytu3S
+        3dJCKXR7uUtpYVsCu2wobH9NnGz/Rcd2ko43m+ySyCAMwthnXp95deY8x/KDBUEImQjrobQQGhCP
+        eg3wmQs0pwnLyKWbwLUJdkFocaQDVDNGut2WhUFpH+/UVzCBBJeqSmyruqISTZkIHWAggnNEByN5
+        LjOJ2poBirhFWOwB+8wilFDNYnt4FnVZNLU4CTuTyAZwNthX2EKCxY/GORAFnZH0i7FykubGO5hk
+        Di1eqi79A7UXbeRJScttDTJFE8adPbOyVg+rzcL/YqRf+fzgFl2kA3IlZ4JxoDjWrBeSfT1vx7JJ
+        JXQhOLpK7GJk24BOZ7e9hoVcCPTMaCEki1IqLElhOaWKcjqWSIuJPX6vJtQwBtZkt+2cFu46ubKy
+        1kVqtYYLpXxVB1Thv0ARtcaHMXzydHh8fPbzi+HXf/MCHbhNB9mUndtY9ugNu85/ecjEw+evlqZy
+        Qa/TwBqy3Kl7GCdpaaOKT4fZgudYo6yQUttNLy+jpQFFHWOpSTrLXbTMlWv5IsVS2za4PcdJekin
+        kKWRZPG9FQiQAUfbpkRu4YhXhTpAR17nPtY6B59gLnKzOSl5szvINPfxBj/FWzR5o7dIfMrb1fuj
+        602nXrYSMjWHuIKuUY1vDwt1QdYhmt7UXJojmAI87mlMMOB1Fy2vog64seUXeD8XXu4IfWU9WStn
+        EqiIYZlY0DDaezCysmuQiukP9PWW02whSPb7FV+gl9JR2Sfoz16/OT15/FHoz/95OrlmiztXqKDh
+        zlsLGu68t7nDfdLsPuKe0sqdz81GFe+JUsYrFrV6TCqQ6OE6VvzBvaWWpPV2XLHyvbviLsthiV0x
+        VYyko7G0FPcJ9x2oUUETMGoCdlyDW4jPWh4QXHMg9BCFQtMinr4keDY7Y6DPdghw5QvaEOCtBW0I
+        8N7mYQh8AAEfh4Al1/KlfKc/oPu15IEVq1dBPzHYhF4j488QULIKqDuwCyPbdx4CYliMhOWIKsbT
+        YjIdS/o0BLYw6SFs3AL/8MXb4fPf2DP+v8/+ePf4ePjDV7NFnitW0JDnrQUNed7bXCB/veF9RD5r
+        wuzAyO15MbddzGznq9FKzNyqNdpq0R/kdzSrreasgVIu3AP50dCLq+z2Rw8/fv3un/367enbn05P
+        ngy//+s27hn03xy/+/Nk+Pp3Rv/Zy+9myz1XsaBxz1sLGve8tznh/v2u95F7JXGAVle2cM2q0cph
+        Eu+stw6k3ZV9u9Tzh/vDvloDg1UpLop35l4Ki/GLCsiif3/vNyytCW4BfrwuUCL0iGPOlnWuSkFj
+        nbcWNNZ5b3PB+vVO95F1u6Cswc2ql9tX5LWKsr1xAHbKcbFXTon+sN4vKEY8UTjMrZp3Zj0aFhNs
+        4KkSe8SJpGW/fuO5kzp/9ursx5e3cD9T0rkaBY103lrQSOe9zQXp1/t8mnT2+uXC0cJ/bGSA82kc
+        AAA=
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Cache-Control:
+      - private
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 16 Aug 2024 22:55:02 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

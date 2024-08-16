@@ -6,6 +6,7 @@ from dream100_api.main import app
 from fastapi.testclient import TestClient
 from config import config
 from dream100.models.project import Project
+from dream100.models.influencer import Influencer
 
 
 @pytest.fixture(scope="function")
@@ -78,3 +79,13 @@ def create_projects(create_project):
         ]
 
     return _create_projects
+@pytest.fixture(scope="function")
+def create_influencer(db_session):
+    def _create_influencer(name="Test Influencer"):
+        influencer = Influencer(name=name)
+        db_session.add(influencer)
+        db_session.commit()
+        db_session.refresh(influencer)
+        return influencer
+
+    return _create_influencer

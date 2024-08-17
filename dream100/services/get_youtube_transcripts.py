@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class GetYoutubeTranscripts:
-    def __init__(self, batch_size=None, delay=1, session=None, influencer_id=None):
+    def __init__(self, influencer_id=None, session=None, batch_size=None, delay=1):
         self.influencer_id = influencer_id
         if session:
             self.session = session
@@ -101,8 +101,8 @@ class GetYoutubeTranscripts:
         logger.info("YouTube transcript retrieval and update process completed.")
 
 
-def get_youtube_transcripts(batch_size=None, delay=1, influencer_id=None):
-    service = GetYoutubeTranscripts(batch_size, delay, influencer_id=influencer_id)
+def get_youtube_transcripts(influencer_id=None, session=None, batch_size=None, delay=1):
+    service = GetYoutubeTranscripts(influencer_id, session, batch_size, delay)
     service.get_and_update_transcripts()
 
 
@@ -110,9 +110,18 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Get YouTube Transcripts")
-    parser.add_argument("--batch_size", type=int, default=None, help="Batch size for processing")
+    parser.add_argument(
+        "--batch_size", type=int, default=None, help="Batch size for processing"
+    )
     parser.add_argument("--delay", type=int, default=1, help="Delay between requests")
-    parser.add_argument("--influencer_id", type=int, default=None, help="Influencer ID to filter contents")
+    parser.add_argument(
+        "--influencer_id",
+        type=int,
+        default=None,
+        help="Influencer ID to filter contents",
+    )
 
     args = parser.parse_args()
-    get_youtube_transcripts(batch_size=args.batch_size, delay=args.delay, influencer_id=args.influencer_id)
+    get_youtube_transcripts(
+        batch_size=args.batch_size, delay=args.delay, influencer_id=args.influencer_id
+    )

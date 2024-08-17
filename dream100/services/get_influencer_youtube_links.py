@@ -82,11 +82,10 @@ class GetYouTubeLinksService:
 
         return video_links
 
-    def process_youtube_links(self):
-        youtube_properties = self.web_property_context.list_web_properties()
-        youtube_properties = [
-            wp for wp in youtube_properties if wp.type == WebPropertyType.YOUTUBE
-        ]
+    def process_youtube_links(self, influencer_id=None):
+        youtube_properties = self.web_property_context.list_web_properties(
+            influencer_id=influencer_id, web_property_type=WebPropertyType.YOUTUBE
+        )
 
         for web_property in youtube_properties:
             logger.info(
@@ -121,9 +120,9 @@ class GetYouTubeLinksService:
         logger.info("Processing complete.")
 
 
-def get_influencer_youtube_links(session=None):
+def get_influencer_youtube_links(session=None, influencer_id=None):
     service = GetYouTubeLinksService(session)
-    service.process_youtube_links()
+    service.process_youtube_links(influencer_id)
 
 
 if __name__ == "__main__":

@@ -37,8 +37,10 @@ class EmbedYoutubeTranscripts:
                 has_scraped_content=True,
             )
 
-            total_count = self.session.scalar(
-                select(func.count()).select_from(stmt.subquery())
+            total_count = self.content_context.count_contents(
+                status=ContentStatus.OK,
+                type=WebPropertyType.YOUTUBE,
+                has_scraped_content=True,
             )
             logger.info(f"Found {total_count} YouTube transcripts to process")
 

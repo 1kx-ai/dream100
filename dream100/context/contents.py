@@ -85,3 +85,11 @@ class ContentContext:
     def list_contents(self, **kwargs):
         query = self.list_contents_query(**kwargs)
         return query.all()
+from sqlalchemy import func, select
+
+class ContentContext:
+    # existing code...
+
+    def count_contents(self, status=None, type=None, has_scraped_content=None):
+        stmt = self.list_contents_query(status=status, type=type, has_scraped_content=has_scraped_content)
+        return self.session.scalar(select(func.count()).select_from(stmt.subquery()))

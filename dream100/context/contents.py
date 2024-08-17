@@ -2,7 +2,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty
 from sqlalchemy import select, func
-from sqlalchemy.orm import joinedload
+from dream100.models.influencer import Influencer
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -81,9 +81,15 @@ class ContentContext:
         content_statuses=None,
         has_scraped_content=None,
         web_property_type=None,
+        influencer_id=None,
         batch_size=None,
     ):
         query = self.session.query(Content).join(Content.web_property)
+
+        if influencer_id is not None:
+            query = query.join(WebProperty.influencer).filter(
+                Influencer.id == influencer_id
+            )
 
         if web_property_id is not None:
             query = query.filter(Content.web_property_id == web_property_id)

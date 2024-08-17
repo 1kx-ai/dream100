@@ -40,13 +40,14 @@ def test_get_youtube_transcripts_invalid_url(create_content, db_session):
     "tests/vcr_cassettes/test_get_youtube_transcripts_with_influencer_id.yaml"
 )
 def test_get_youtube_transcripts_with_influencer_id(
-    create_content, db_session, create_influencer
+    create_content, db_session, create_influencer, create_web_property
 ):
     influencer = create_influencer(name="Test Influencer")
+    web_property = create_web_property(influencer_id=influencer.id, type="youtube", url="https://www.youtube.com/testchannel")
     content = create_content(
+        web_property_id=web_property.id,
         link="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         status=ContentStatus.NONE,
-        influencer_id=influencer.id,
     )
     service = GetYoutubeTranscripts(
         batch_size=1, delay=1, session=db_session, influencer_id=influencer.id

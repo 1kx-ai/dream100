@@ -32,7 +32,7 @@ class EmbedYoutubeTranscripts:
         content_iterator = self.content_context.iter_contents(
             batch_size=100,
             web_property_type=WebPropertyType.YOUTUBE,
-            content_status=ContentStatus.NONE,
+            content_statuses=[ContentStatus.NONE],
             has_scraped_content=True,
         )
 

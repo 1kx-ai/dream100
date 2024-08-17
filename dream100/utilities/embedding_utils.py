@@ -1,5 +1,5 @@
 import numpy as np
-from ..content_embeddings.model import EmbeddingModel
+from .model import EmbeddingModel
 
 
 def create_embedding(text):

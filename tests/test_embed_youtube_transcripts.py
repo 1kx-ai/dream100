@@ -6,7 +6,7 @@ from tests.mocks.mock_model import MockEmbeddingModel
 
 
 def test_embed_youtube_transcripts(db_session, create_content):
-    with patch("dream100.content_embeddings.model.EmbeddingModel", MockEmbeddingModel):
+    with patch("dream100.utilities.model.EmbeddingModel", MockEmbeddingModel):
         content = create_content(scraped_content="Scraped Content")
         content_id = content.id
         embed_youtube_transcripts(session=db_session)
@@ -21,7 +21,7 @@ def test_embed_youtube_transcripts(db_session, create_content):
 def test_embed_youtube_transcripts_with_influencer_id(
     db_session, create_content, create_influencer, create_web_property
 ):
-    with patch("dream100.content_embeddings.model.EmbeddingModel", MockEmbeddingModel):
+    with patch("dream100.utilities.model.EmbeddingModel", MockEmbeddingModel):
         influencer = create_influencer(name="Test Influencer")
         web_property = create_web_property(
             influencer_id=influencer.id,

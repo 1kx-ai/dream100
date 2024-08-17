@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 class EmbedYoutubeTranscripts:
-    def __init__(self, batch_size=100, session=None):
+    def __init__(self, batch_size=100, session=None, influencer_id=None):
+        self.influencer_id = influencer_id
         if session:
             self.session = session
             self.should_close_session = False
@@ -34,6 +35,7 @@ class EmbedYoutubeTranscripts:
             web_property_type=WebPropertyType.YOUTUBE,
             content_statuses=[ContentStatus.NONE],
             has_scraped_content=True,
+            influencer_id=self.influencer_id,
         )
 
         for content in content_iterator:
@@ -61,8 +63,8 @@ class EmbedYoutubeTranscripts:
             logger.exception("Full traceback:")
 
 
-def embed_youtube_transcripts(batch_size=100, session=None):
-    service = EmbedYoutubeTranscripts(batch_size, session)
+def embed_youtube_transcripts(batch_size=100, session=None, influencer_id=None):
+    service = EmbedYoutubeTranscripts(batch_size, session, influencer_id)
     service.process_transcripts()
 
 

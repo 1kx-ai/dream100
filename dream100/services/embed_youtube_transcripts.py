@@ -9,6 +9,7 @@ from dream100.utilities.embedding_utils import (
 )
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
+from sqlalchemy import func, select
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -30,15 +31,10 @@ class EmbedYoutubeTranscripts:
     def process_transcripts(self):
         try:
             # Query for YouTube content with OK status and scraped_content
-            stmt = (
-                select(Content)
-                .join(Content.web_property)
-                .filter(
-                    WebProperty.type == WebPropertyType.YOUTUBE,
-                    Content.status == ContentStatus.OK,
-                    Content.scraped_content.isnot(None),
-                )
-                .options(joinedload(Content.web_property))
+            stmt = self.content_context.list_contents_query(
+                status=ContentStatus.OK,
+                type=WebPropertyType.YOUTUBE,
+                has_scraped_content=True,
             )
 
             total_count = self.session.scalar(

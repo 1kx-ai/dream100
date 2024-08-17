@@ -84,7 +84,7 @@ class ContentContext:
         influencer_id=None,
         batch_size=None,
     ):
-        query = self.session.query(Content).join(Content.web_property)
+        query = self.session.query(Content).join(Content.web_property).join(WebProperty.influencer)
 
         if influencer_id is not None:
             query = query.join(WebProperty.influencer).filter(

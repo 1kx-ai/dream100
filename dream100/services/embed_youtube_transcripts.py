@@ -16,8 +16,13 @@ logger = logging.getLogger(__name__)
 
 
 class EmbedYoutubeTranscripts:
-    def __init__(self, batch_size=100):
-        self.session, _ = create_session()
+    def __init__(self, batch_size=100, session=None):
+        if session:
+            self.session = session
+            self.should_close_session = False
+        else:
+            self.session, _ = create_session()
+            self.should_close_session = True
         self.content_context = ContentContext(self.session)
         self.embedding_context = ContentEmbeddingContext(self.session)
         self.batch_size = batch_size
@@ -53,7 +58,8 @@ class EmbedYoutubeTranscripts:
         except Exception as e:
             logger.error(f"An error occurred while processing transcripts: {str(e)}")
         finally:
-            self.session.close()
+            if self.should_close_session:
+                self.session.close()
 
     def process_batch(self, contents):
         for content in contents:
@@ -83,8 +89,8 @@ class EmbedYoutubeTranscripts:
                 continue
 
 
-def embed_youtube_transcripts(batch_size=100):
-    service = EmbedYoutubeTranscripts(batch_size)
+def embed_youtube_transcripts(batch_size=100, session=None):
+    service = EmbedYoutubeTranscripts(batch_size, session)
     service.process_transcripts()
 
 

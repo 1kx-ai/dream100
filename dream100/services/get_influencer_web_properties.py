@@ -85,10 +85,17 @@ class InfluencerWebPropertiesService:
                         f"Added {platform} for {influencer.name}: {social_link}"
                     )
 
-    def get_web_properties(self):
-        influencers = self.influencer_context.list_influencers()
+    def get_web_properties(self, influencer_id=None):
+        if influencer_id:
+            influencers = [self.influencer_context.get_influencer(influencer_id)]
+        else:
+            influencers = self.influencer_context.list_influencers()
 
         for influencer in influencers:
+            if influencer is None:
+                logger.info(f"Influencer with ID {influencer_id} not found.")
+                continue
+
             existing_properties = self.web_property_context.list_web_properties(
                 influencer.id
             )
@@ -116,9 +123,9 @@ class InfluencerWebPropertiesService:
         logger.info("Processing complete.")
 
 
-def get_influencer_web_properties(session):
+def get_influencer_web_properties(session, influencer_id=None):
     service = InfluencerWebPropertiesService(session)
-    service.get_web_properties()
+    service.get_web_properties(influencer_id)
 
 
 if __name__ == "__main__":

@@ -21,7 +21,6 @@ class BearerAuth(AuthProvider):
             raise HTTPException(status_code=401, detail="Invalid authorization header")
         token = auth_header.split()[1]
         logger.debug(f"Extracted token: {token}")
-        print(self.api_keys)
         if token in self.api_keys:
             logger.debug("Valid token found")
             return {"user_id": token, "role": self.api_keys[token]}

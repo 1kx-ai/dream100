@@ -75,4 +75,5 @@ class ContentContext:
             query = query.filter(Content.web_property_id == web_property_id)
         if status:
             query = query.filter(Content.status == status)
+        query = query.filter(Content.scraped_content.isnot(None))
         return query.all()

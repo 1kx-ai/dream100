@@ -78,17 +78,21 @@ class ContentContext:
     def list_contents_query(
         self,
         web_property_id=None,
-        content_status=None,
+        content_statuses=None,
         has_scraped_content=None,
         web_property_type=None,
+        batch_size=None,
     ):
         query = self.session.query(Content).join(Content.web_property)
 
         if web_property_id is not None:
             query = query.filter(Content.web_property_id == web_property_id)
 
-        if content_status is not None:
-            query = query.filter(Content.status == content_status)
+        if content_statuses:
+            if isinstance(content_statuses, (list, tuple)):
+                query = query.filter(Content.status.in_(content_statuses))
+            else:
+                query = query.filter(Content.status == content_statuses)
 
         if web_property_type is not None:
             query = query.filter(WebProperty.type == web_property_type)
@@ -98,8 +102,10 @@ class ContentContext:
         elif has_scraped_content is False:
             query = query.filter(Content.scraped_content.is_(None))
 
-        logger.debug(f"Generated SQL query: {query}")
+        if batch_size:
+            query = query.limit(batch_size)
 
+        logger.debug(f"Generated SQL query: {query}")
         return query
 
     def list_contents(self, **kwargs):

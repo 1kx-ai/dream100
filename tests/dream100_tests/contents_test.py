@@ -86,8 +86,10 @@ def test_list_contents_by_status(content_context, create_web_property):
         "https://www.youtube.com/watch?v=video4",
         status=ContentStatus.ERROR,
     )
-    ok_contents = content_context.list_contents(status=ContentStatus.OK)
-    error_contents = content_context.list_contents(status=ContentStatus.ERROR)
+    ok_contents = content_context.list_contents(content_statuses=[ContentStatus.OK])
+    error_contents = content_context.list_contents(
+        content_statuses=[ContentStatus.ERROR]
+    )
     assert len(ok_contents) == 1
     assert len(error_contents) == 1
     assert ok_contents[0].link == "https://www.youtube.com/watch?v=video3"

@@ -128,7 +128,7 @@ def create_content(db_session, create_web_property):
     def _create_content(
         web_property_id=None,
         link="https://www.example.com",
-        scraped_content="Sample content",
+        scraped_content=None,
         views=0,
         status=ContentStatus.NONE,
     ):

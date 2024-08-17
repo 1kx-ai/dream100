@@ -12,8 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 class GetYoutubeTranscripts:
-    def __init__(self, batch_size=None, delay=1):
-        self.session, _ = create_session()
+    def __init__(self, batch_size=None, delay=1, session=None):
+        if session:
+            self.session = session
+            self.should_close_session = False
+        else:
+            self.session, _ = create_session()
+            self.should_close_session = True
         self.content_context = ContentContext(self.session)
         self.last_request_time = 0
         self.request_interval = delay
@@ -101,7 +106,8 @@ class GetYoutubeTranscripts:
                     content.id, status=ContentStatus.ERROR
                 )
 
-        self.session.close()
+        if self.should_close_session:
+            self.session.close()
         logger.info("YouTube transcript retrieval and update process completed.")
 
 

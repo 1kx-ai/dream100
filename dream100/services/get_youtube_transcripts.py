@@ -1,10 +1,9 @@
 import time
-from sqlalchemy import or_
 from youtube_transcript_api import YouTubeTranscriptApi
 from urllib.parse import urlparse, parse_qs
 from dream100.db_config import create_session
-from dream100.models.content import Content, ContentStatus
-from dream100.models.web_property import WebProperty, WebPropertyType
+from dream100.models.content import ContentStatus
+from dream100.models.web_property import WebPropertyType
 from dream100.context.contents import ContentContext
 import logging
 
@@ -55,22 +54,11 @@ class GetYoutubeTranscripts:
             return None
 
     def get_and_update_transcripts(self):
-        query = (
-            self.session.query(Content)
-            .join(Content.web_property)
-            .filter(
-                WebProperty.type == WebPropertyType.YOUTUBE,
-                or_(
-                    Content.status == ContentStatus.NONE,
-                    Content.status == ContentStatus.WARNING,
-                ),
-            )
+        contents = self.content_context.list_contents(
+            web_property_type=WebPropertyType.YOUTUBE,
+            content_statuses=[ContentStatus.NONE, ContentStatus.WARNING],
+            batch_size=self.batch_size,
         )
-
-        if self.batch_size:
-            query = query.limit(self.batch_size)
-
-        contents = query.all()
 
         for content in contents:
             logger.info(

@@ -101,7 +101,7 @@ class GetYoutubeTranscripts:
         logger.info("YouTube transcript retrieval and update process completed.")
 
 
-def get_youtube_transcripts(influencer_id=None, session=None, batch_size=None, delay=1):
+def get_youtube_transcripts(session=None, influencer_id=None, batch_size=None, delay=1):
     service = GetYoutubeTranscripts(influencer_id, session, batch_size, delay)
     service.get_and_update_transcripts()
 

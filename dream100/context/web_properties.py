@@ -53,8 +53,10 @@ class WebPropertyContext:
                 raise e
         return False
 
-    def list_web_properties(self, influencer_id=None):
+    def list_web_properties(self, influencer_id=None, web_property_type=None):
         query = self.session.query(WebProperty)
         if influencer_id:
             query = query.filter(WebProperty.influencer_id == influencer_id)
+        if web_property_type:
+            query = query.filter(WebProperty.type == WebPropertyType(web_property_type))
         return query.all()

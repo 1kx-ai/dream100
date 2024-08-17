@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from dream100.db_config import create_session
 from dream100.context.influencers import InfluencerContext
 from dream100.context.web_properties import WebPropertyContext
-from dream100.models.web_property import WebProperty, WebPropertyType
+from dream100.models.web_property import WebPropertyType
 from config import config
 import logging
 

@@ -24,4 +24,4 @@ class Content(Base):
     web_property = relationship("WebProperty", back_populates="contents")
 
     def __repr__(self):
-        return f"<Content(id={self.id}, link='{self.link}', views={self.views}, status={self.status})>"
+        return f"<Content(id={self.id}, link='{self.link}', views={self.views}, status={self.status}, scraped_content={self.scraped_content})>"

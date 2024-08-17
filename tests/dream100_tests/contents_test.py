@@ -68,7 +68,7 @@ def test_list_contents(content_context, create_web_property):
     content_context.create_content(
         web_property.id, "https://www.youtube.com/watch?v=video2"
     )
-    contents = content_context.list_contents(web_property.id)
+    contents = content_context.list_contents(web_property_id=web_property.id)
     assert len(contents) == 2
     assert any(c.link == "https://www.youtube.com/watch?v=video1" for c in contents)
     assert any(c.link == "https://www.youtube.com/watch?v=video2" for c in contents)

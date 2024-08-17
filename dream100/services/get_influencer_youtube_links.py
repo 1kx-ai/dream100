@@ -97,7 +97,7 @@ class GetYouTubeLinksService:
             if youtube_videos:
                 for video_link in youtube_videos:
                     existing_content = self.content_context.list_contents(
-                        web_property.id
+                        web_property_id=web_property.id
                     )
                     if not any(
                         content.link == video_link for content in existing_content

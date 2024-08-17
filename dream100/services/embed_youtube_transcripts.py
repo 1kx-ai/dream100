@@ -7,10 +7,10 @@ from dream100.utilities.embedding_utils import (
     chunk_content,
     batch_create_embeddings,
 )
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
-from sqlalchemy import func, select
 import logging
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,62 +29,36 @@ class EmbedYoutubeTranscripts:
         self.batch_size = batch_size
 
     def process_transcripts(self):
+        content_iterator = self.content_context.iter_contents(
+            batch_size=100,
+            web_property_type=WebPropertyType.YOUTUBE,
+            content_status=ContentStatus.NONE,
+            has_scraped_content=True,
+        )
+
+        for content in content_iterator:
+            self.process_content(content)
+
+    def process_content(self, content):
         try:
-            # Query for YouTube content with OK status and scraped_content
-            stmt = self.content_context.list_contents_query(
-                status=ContentStatus.OK,
-                type=WebPropertyType.YOUTUBE,
-                has_scraped_content=True,
+            logger.info(f"Processing content ID: {content.id}")
+
+            chunks = chunk_content(content.scraped_content)
+            embeddings = batch_create_embeddings(chunks)
+
+            for chunk, embedding in zip(chunks, embeddings):
+                self.embedding_context.create_embedding(content.id, chunk, embedding)
+
+            # Use update_content instead of update_content_status
+            self.content_context.update_content(content.id, status=ContentStatus.OK)
+
+            logger.info(
+                f"Processed YouTube content ID: {content.id}, URL: {content.link}"
             )
-
-            total_count = self.content_context.count_contents(
-                status=ContentStatus.OK,
-                type=WebPropertyType.YOUTUBE,
-                has_scraped_content=True,
-            )
-            logger.info(f"Found {total_count} YouTube transcripts to process")
-
-            for i in range(0, total_count, self.batch_size):
-                batch = self.session.scalars(
-                    stmt.offset(i).limit(self.batch_size)
-                ).all()
-                self.process_batch(batch)
-                logger.info(f"Processed batch {i // self.batch_size + 1}")
-
-            logger.info("Finished processing all YouTube transcripts")
 
         except Exception as e:
-            logger.error(f"An error occurred while processing transcripts: {str(e)}")
-        finally:
-            if self.should_close_session:
-                self.session.close()
-
-    def process_batch(self, contents):
-        for content in contents:
-            try:
-                # Double-check that this content is indeed from YouTube
-                if content.web_property.type != WebPropertyType.YOUTUBE:
-                    logger.warning(f"Skipping non-YouTube content ID: {content.id}")
-                    continue
-
-                chunks = chunk_content(content.scraped_content)
-                embeddings = batch_create_embeddings(chunks)
-
-                for chunk, embedding in zip(chunks, embeddings):
-                    self.embedding_context.create_embedding(
-                        content.id, chunk, embedding
-                    )
-
-                logger.info(
-                    f"Processed YouTube content ID: {content.id}, URL: {content.link}"
-                )
-
-            except Exception as e:
-                logger.error(
-                    f"Error processing YouTube content ID: {content.id}: {str(e)}"
-                )
-                self.session.rollback()
-                continue
+            logger.error(f"Error processing YouTube content ID: {content.id}: {str(e)}")
+            logger.exception("Full traceback:")
 
 
 def embed_youtube_transcripts(batch_size=100, session=None):

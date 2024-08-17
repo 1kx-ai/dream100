@@ -12,6 +12,16 @@ from dream100.models.project import Project
 from dream100.models.influencer import Influencer
 from dream100.models.web_property import WebProperty, WebPropertyType
 from dream100.models.content import Content, ContentStatus
+from dream100.content_embeddings import model as original_model
+from tests.mocks.mock_model import MockEmbeddingModel
+
+
+@pytest.fixture(scope="function", autouse=True)
+def mock_embedding_model():
+    original_instance = original_model.EmbeddingModel._instance
+    original_model.EmbeddingModel._instance = MockEmbeddingModel()
+    yield
+    original_model.EmbeddingModel._instance = original_instance
 
 
 @pytest.fixture(scope="function")

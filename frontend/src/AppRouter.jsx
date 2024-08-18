@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import InfluencersPage from './pages/InfluencersPage';
 import AuthPage from './pages/AuthPage';
-// import ProjectsPage from '../pages/ProjectsPage';
+import ProjectsPage from './pages/ProjectsPage';
 // import WebPropertiesPage from '../pages/WebPropertiesPage';
 
 const PrivateRoute = ({ children }) => {
@@ -34,7 +34,8 @@ const AppRouter = () => {
         <Routes>
           <Route path="/" element={<InfluencersPage />} />
           <Route path="/influencers" element={<InfluencersPage />} />
-          {/* <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          {/* 
           <Route path="/web-properties" element={<WebPropertiesPage />} /> */}
           <Route path="/auth" element={<AuthPage />} />
         </Routes>

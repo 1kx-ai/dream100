@@ -1,45 +1,53 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import TopNavBar from './components/layout/TopNavBar';
 import InfluencersPage from './pages/InfluencersPage';
-import AuthPage from './pages/AuthPage';
 import ProjectsPage from './pages/ProjectsPage';
-// import WebPropertiesPage from '../pages/WebPropertiesPage';
+import ProjectSelectorPage from './pages/ProjectSelectorPage';
+import AuthPage from './pages/AuthPage';
 
 const PrivateRoute = ({ children }) => {
-  const isAuthenticated = !!getApiToken();
-  return isAuthenticated ? children : <Navigate to="/auth" replace />;
+  const isAuthenticated = !!localStorage.getItem('API_TOKEN');
+  const hasSelectedProject = !!localStorage.getItem('currentProjectId');
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!hasSelectedProject) {
+    return <Navigate to="/select-project" replace />;
+  }
+
+  return children;
 };
+
+const Layout = () => (
+  <>
+    <TopNavBar />
+    <Outlet />
+  </>
+);
 
 const AppRouter = () => {
   return (
     <Router>
-      <div>
-        <nav className="bg-gray-800 p-4">
-          <ul className="flex space-x-4">
-            <li>
-              <Link to="/" className="text-white hover:text-gray-300">Home</Link>
-            </li>
-            <li>
-              <Link to="/influencers" className="text-white hover:text-gray-300">Influencers</Link>
-            </li>
-            {/* <li>
-              <Link to="/projects" className="text-white hover:text-gray-300">Projects</Link>
-            </li>
-            <li>
-              <Link to="/web-properties" className="text-white hover:text-gray-300">Web Properties</Link>
-            </li> */}
-          </ul>
-        </nav>
-
+      <Suspense fallback={
+        <div className="hero min-h-screen bg-base-200">
+          <div className="hero-content text-center">
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        </div>
+      }>
         <Routes>
-          <Route path="/" element={<InfluencersPage />} />
-          <Route path="/influencers" element={<InfluencersPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          {/* 
-          <Route path="/web-properties" element={<WebPropertiesPage />} /> */}
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/select-project" element={<ProjectSelectorPage />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<PrivateRoute><InfluencersPage /></PrivateRoute>} />
+            <Route path="/influencers" element={<PrivateRoute><InfluencersPage /></PrivateRoute>} />
+            <Route path="/projects" element={<PrivateRoute><ProjectsPage /></PrivateRoute>} />
+          </Route>
         </Routes>
-      </div>
+      </Suspense>
     </Router>
   );
 };

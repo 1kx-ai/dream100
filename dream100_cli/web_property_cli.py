@@ -1,6 +1,6 @@
 from dream100.models.web_property import WebPropertyType
 from dream100_cli.renderer import cli_render, cli_input, cli_render_menu, cli_render_error
-
+from colorama import Fore
 
 def web_property_menu(web_property_context):
     while True:

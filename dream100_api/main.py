@@ -1,9 +1,18 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .auth.bearer_auth import BearerAuth
 from .auth.middleware import AuthMiddleware
 from .routers import projects, influencers, web_properties
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # React app's address
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize with Bearer token auth
 auth_provider = BearerAuth()

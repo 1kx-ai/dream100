@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from dream100.db_config import get_db
 from dream100.context.influencers import InfluencerContext
 from dream100_api.schemas.influencer import (
@@ -16,10 +16,12 @@ router = APIRouter()
 
 @router.get("/influencers", response_model=List[Influencer])
 async def list_influencers(
-    current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)
+    project_id: Optional[int] = Query(None, description="Filter influencers by project ID"),
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
     influencer_context = InfluencerContext(db)
-    influencers = influencer_context.list_influencers()
+    influencers = influencer_context.list_influencers(project_id=project_id)
     return add_project_ids_to_influencers(influencers)
 
 

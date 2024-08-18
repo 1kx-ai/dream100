@@ -2,6 +2,9 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
+import logging
+
+logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
@@ -29,7 +32,12 @@ def init_db(engine):
     """Initialize the database by creating all tables and extensions"""
     # Create the vector extension
     with engine.connect() as connection:
-        connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
+        try:
+          connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
+        except:
+          logger.info(f"Failed to initialize pgvector extension")
+            
+
         connection.commit()
 
     # Create all tables

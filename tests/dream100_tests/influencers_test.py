@@ -77,3 +77,31 @@ def test_get_influencer_projects(influencer_context, create_project, db_session)
     assert len(projects) == 2
     assert any(p.name == "Test Project" for p in projects)
     assert any(p.name == "Another Project" for p in projects)
+
+def test_list_influencers_by_project(influencer_context, create_project, db_session):
+    project1 = create_project()
+    project2 = Project(name="Project 2", description="Another test project")
+    db_session.add(project2)
+    db_session.commit()
+
+    influencer_context.create_influencer("Influencer 1", [project1.id])
+    influencer_context.create_influencer("Influencer 2", [project2.id])
+    influencer_context.create_influencer("Influencer 3", [project1.id, project2.id])
+
+    # Filter by project1
+    influencers = influencer_context.list_influencers(project_id=project1.id)
+    assert len(influencers) == 2
+    assert any(i.name == "Influencer 1" for i in influencers)
+    assert any(i.name == "Influencer 3" for i in influencers)
+    assert all(project1.id in [p.id for p in i.projects] for i in influencers)
+
+    # Filter by project2
+    influencers = influencer_context.list_influencers(project_id=project2.id)
+    assert len(influencers) == 2
+    assert any(i.name == "Influencer 2" for i in influencers)
+    assert any(i.name == "Influencer 3" for i in influencers)
+    assert all(project2.id in [p.id for p in i.projects] for i in influencers)
+
+    # No filter (should return all influencers)
+    influencers = influencer_context.list_influencers()
+    assert len(influencers) == 3

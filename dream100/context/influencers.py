@@ -61,12 +61,13 @@ class InfluencerContext:
                 raise e
         return False
 
-    def list_influencers(self):
-        return (
-            self.session.query(Influencer)
-            .options(joinedload(Influencer.projects))
-            .all()
-        )
+    def list_influencers(self, project_id=None):
+        query = self.session.query(Influencer).options(joinedload(Influencer.projects))
+        
+        if project_id is not None:
+            query = query.filter(Influencer.projects.any(Project.id == project_id))
+        
+        return query.all()
 
     def get_influencer_projects(self, influencer_id):
         influencer = self.get_influencer(influencer_id)

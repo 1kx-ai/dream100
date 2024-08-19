@@ -2,6 +2,7 @@ import pytest
 from dream100.context.web_properties import WebPropertyContext
 from dream100.models.web_property import WebProperty, WebPropertyType
 from dream100.models.influencer import Influencer
+from dream100.models.project import Project
 
 
 @pytest.fixture
@@ -102,3 +103,37 @@ def test_list_all_web_properties(web_property_context, create_influencer, db_ses
     assert len(all_web_properties) >= 2
     assert any(wp.type == WebPropertyType.TWITTER for wp in all_web_properties)
     assert any(wp.type == WebPropertyType.LINKEDIN for wp in all_web_properties)
+
+def test_web_property_context(db_session, create_influencer, create_web_property, create_project):
+    from dream100.context.web_properties import WebPropertyContext
+    
+    project1 = create_project("Project 1")
+    project2 = create_project("Project 2")
+    influencer1 = create_influencer("Influencer 1")
+    influencer2 = create_influencer("Influencer 2")
+    influencer1.projects.extend([project1, project2])
+    influencer2.projects.append(project2)
+    db_session.commit()
+    
+    create_web_property(influencer_id=influencer1.id, type="youtube", url="https://youtube.com/channel1")
+    create_web_property(influencer_id=influencer2.id, type="twitter", url="https://twitter.com/user2")
+    
+    context = WebPropertyContext(db_session)
+    
+    # Test listing all web properties
+    all_properties = context.list_web_properties()
+    assert len(all_properties) == 2
+    
+    # Test filtering by influencer_id
+    influencer1_properties = context.list_web_properties(influencer_id=influencer1.id)
+    assert len(influencer1_properties) == 1
+    assert influencer1_properties[0].url == "https://youtube.com/channel1"
+    
+    # Test filtering by project_id
+    project2_properties = context.list_web_properties(project_id=project2.id)
+    assert len(project2_properties) == 2
+    
+    # Test filtering by both influencer_id and project_id
+    filtered_properties = context.list_web_properties(influencer_id=influencer1.id, project_id=project1.id)
+    assert len(filtered_properties) == 1
+    assert filtered_properties[0].url == "https://youtube.com/channel1"

@@ -1,5 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from dream100.models.web_property import WebProperty, WebPropertyType
+from dream100.models.project import Project
+from dream100.models.influencer import Influencer
 
 
 class WebPropertyContext:
@@ -53,10 +55,18 @@ class WebPropertyContext:
                 raise e
         return False
 
-    def list_web_properties(self, influencer_id=None, web_property_type=None):
+    def list_web_properties(self, influencer_id=None, web_property_type=None, project_id=None):
         query = self.session.query(WebProperty)
+
         if influencer_id:
             query = query.filter(WebProperty.influencer_id == influencer_id)
+            
         if web_property_type:
             query = query.filter(WebProperty.type == WebPropertyType(web_property_type))
+
+        if project_id:
+            query = query.join(Influencer, WebProperty.influencer_id == Influencer.id)
+            query = query.join(Project, Influencer.projects)
+            query = query.filter(Project.id == project_id)
+
         return query.all()

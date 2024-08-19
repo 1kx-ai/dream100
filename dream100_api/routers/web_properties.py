@@ -9,6 +9,7 @@ from dream100_api.schemas.web_property import (
     WebProperty,
     WebPropertyCreate,
     WebPropertyUpdate,
+    PaginatedWebProperties,
 )
 
 router = APIRouter()
@@ -81,13 +82,29 @@ async def delete_web_property(
     return
 
 
-@router.get("/web_properties", response_model=List[WebProperty])
+@router.get("/web_properties", response_model=PaginatedWebProperties)
 async def list_web_properties(
     influencer_id: Optional[int] = Query(None, description="Filter web properties by influencer ID"),
     project_id: Optional[int] = Query(None, description="Filter web properties by project ID"),
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(10, ge=1, le=100, description="Items per page"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)
-    web_properties = context.list_web_properties(influencer_id=influencer_id, project_id=project_id)
-    return web_properties
+    web_properties = context.list_web_properties(
+        influencer_id=influencer_id,
+        project_id=project_id,
+        page=page,
+        per_page=per_page
+    )
+    total = context.count_web_properties(influencer_id=influencer_id, project_id=project_id)
+    total_pages = (total - 1) // per_page + 1
+    
+    return PaginatedWebProperties(
+        items=web_properties,
+        total=total,
+        page=page,
+        per_page=per_page,
+        pages=total_pages
+    )

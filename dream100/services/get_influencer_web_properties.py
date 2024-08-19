@@ -97,7 +97,7 @@ class InfluencerWebPropertiesService:
                 continue
 
             existing_properties = self.web_property_context.list_web_properties(
-                influencer.id
+                influencer_id=influencer.id
             )
             if (
                 len(existing_properties) < 5

@@ -89,4 +89,5 @@ async def list_web_properties(
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)
-    return context.list_web_properties(influencer_id=influencer_id, project_id=project_id)
+    web_properties = context.list_web_properties(influencer_id=influencer_id, project_id=project_id)
+    return web_properties

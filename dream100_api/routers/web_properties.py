@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from dream100.db_config import get_db
 from dream100_api.auth.dependencies import get_current_user
@@ -83,9 +83,10 @@ async def delete_web_property(
 
 @router.get("/web_properties", response_model=List[WebProperty])
 async def list_web_properties(
-    influencer_id: int = None,
+    influencer_id: Optional[int] = Query(None, description="Filter web properties by influencer ID"),
+    project_id: Optional[int] = Query(None, description="Filter web properties by project ID"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     context = WebPropertyContext(db)
-    return context.list_web_properties(influencer_id=influencer_id)
+    return context.list_web_properties(influencer_id=influencer_id, project_id=project_id)

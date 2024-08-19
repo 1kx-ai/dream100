@@ -59,3 +59,31 @@ def test_list_web_properties(client, auth_headers, create_web_property):
     response = client.get("/web_properties", headers=auth_headers)
     assert response.status_code == 200
     assert len(response.json()) > 0
+
+def test_list_web_properties_by_project(client, auth_headers, create_project, create_influencer, create_web_property):
+    # Create projects
+    project1 = create_project("Project 1")
+    project2 = create_project("Project 2")
+
+    print(project2)
+    
+    # Create influencers and associate them with projects
+    influencer1 = create_influencer("Influencer 1", project=project1)
+    influencer2 = create_influencer("Influencer 2", project=project2)
+    influencer3 = create_influencer("Influencer 3", project=project1)
+    
+    # Create web properties
+    web_property1 = create_web_property(influencer_id=influencer1.id, type="youtube", url="https://www.youtube.com/channel1")
+    web_property2 = create_web_property(influencer_id=influencer2.id, type="twitter", url="https://www.twitter.com/user2")
+    web_property3 = create_web_property(influencer_id=influencer3.id, type="linkedin", url="https://www.linkedin.com/in/user3")
+    
+    # Test filtering by project_id
+    response = client.get(f"/web_properties?project_id={project1.id}", headers=auth_headers)
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert {wp['id'] for wp in response.json()} == {web_property1.id, web_property3.id}
+    
+    # Test with non-existent project_id
+    response = client.get("/web_properties?project_id=9999", headers=auth_headers)
+    assert response.status_code == 200
+    assert len(response.json()) == 0

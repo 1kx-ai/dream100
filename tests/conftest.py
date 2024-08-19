@@ -98,13 +98,14 @@ def create_projects(create_project):
 
 @pytest.fixture(scope="function")
 def create_influencer(db_session):
-    def _create_influencer(name="Test Influencer"):
+    def _create_influencer(name="Test Influencer", project=None):
         influencer = Influencer(name=name)
+        if project:
+            influencer.projects.append(project)
         db_session.add(influencer)
         db_session.commit()
         db_session.refresh(influencer)
         return influencer
-
     return _create_influencer
 
 

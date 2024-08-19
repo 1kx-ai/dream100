@@ -55,7 +55,7 @@ class WebPropertyContext:
                 raise e
         return False
 
-    def list_web_properties_query(self, influencer_id=None, web_property_type=None, project_id=None):
+    def list_web_properties_query(self, influencer_id=None, web_property_type=None, project_id=None, page=None, per_page=None):
         query = self.session.query(WebProperty)
 
         if influencer_id:
@@ -69,10 +69,13 @@ class WebPropertyContext:
             query = query.join(Project, Influencer.projects)
             query = query.filter(Project.id == project_id)
 
+        if page is not None and per_page is not None:
+            query = query.offset((page - 1) * per_page).limit(per_page)
+
         return query
 
-    def list_web_properties(self, influencer_id=None, web_property_type=None, project_id=None):
-        query = self.list_web_properties_query(influencer_id, web_property_type, project_id)
+    def list_web_properties(self, influencer_id=None, web_property_type=None, project_id=None, page=None, per_page=None):
+        query = self.list_web_properties_query(influencer_id, web_property_type, project_id, page, per_page)
         return query.all()
 
     def count_web_properties(self, influencer_id=None, web_property_type=None, project_id=None):

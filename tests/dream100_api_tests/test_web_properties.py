@@ -65,8 +65,6 @@ def test_list_web_properties_by_project(client, auth_headers, create_project, cr
     project1 = create_project("Project 1")
     project2 = create_project("Project 2")
 
-    print(project2)
-    
     # Create influencers and associate them with projects
     influencer1 = create_influencer("Influencer 1", project=project1)
     influencer2 = create_influencer("Influencer 2", project=project2)

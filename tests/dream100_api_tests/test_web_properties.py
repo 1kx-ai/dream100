@@ -55,10 +55,29 @@ def test_delete_web_property(client, auth_headers, create_web_property):
 
 
 def test_list_web_properties(client, auth_headers, create_web_property):
-    web_property = create_web_property()
+    # Create multiple web properties
+    for _ in range(15):
+        create_web_property()
+
+    # Test default pagination (page 1, per_page 10)
     response = client.get("/web_properties", headers=auth_headers)
     assert response.status_code == 200
-    assert len(response.json()) > 0
+    data = response.json()
+    assert len(data["items"]) == 10
+    assert data["total"] == 15
+    assert data["page"] == 1
+    assert data["per_page"] == 10
+    assert data["pages"] == 2
+
+    # Test custom pagination
+    response = client.get("/web_properties?page=2&per_page=5", headers=auth_headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["items"]) == 5
+    assert data["total"] == 15
+    assert data["page"] == 2
+    assert data["per_page"] == 5
+    assert data["pages"] == 3
 
 def test_list_web_properties_by_project(client, auth_headers, create_project, create_influencer, create_web_property):
     # Create projects
@@ -78,10 +97,26 @@ def test_list_web_properties_by_project(client, auth_headers, create_project, cr
     # Test filtering by project_id
     response = client.get(f"/web_properties?project_id={project1.id}", headers=auth_headers)
     assert response.status_code == 200
-    assert len(response.json()) == 2
-    assert {wp['id'] for wp in response.json()} == {web_property1.id, web_property3.id}
+    data = response.json()
+    assert len(data["items"]) == 2
+    assert {wp['id'] for wp in data["items"]} == {web_property1.id, web_property3.id}
+    assert data["total"] == 2
     
     # Test with non-existent project_id
     response = client.get("/web_properties?project_id=9999", headers=auth_headers)
     assert response.status_code == 200
-    assert len(response.json()) == 0
+    data = response.json()
+    assert len(data["items"]) == 0
+    assert data["total"] == 0
+
+def test_list_web_properties_by_influencer(client, auth_headers, create_influencer, create_web_property):
+    influencer = create_influencer("Test Influencer")
+    for _ in range(5):
+        create_web_property(influencer_id=influencer.id)
+
+    response = client.get(f"/web_properties?influencer_id={influencer.id}", headers=auth_headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["items"]) == 5
+    assert data["total"] == 5
+    assert all(wp["influencer_id"] == influencer.id for wp in data["items"])

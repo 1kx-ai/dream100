@@ -137,3 +137,41 @@ def test_web_property_context(db_session, create_influencer, create_web_property
     filtered_properties = context.list_web_properties(influencer_id=influencer1.id, project_id=project1.id)
     assert len(filtered_properties) == 1
     assert filtered_properties[0].url == "https://youtube.com/channel1"
+
+def test_web_property_pagination(db_session, create_influencer, create_web_property):
+    influencer = create_influencer("Influencer for Pagination")
+    context = WebPropertyContext(db_session)
+
+    # Create 15 web properties
+    for i in range(15):
+        create_web_property(influencer_id=influencer.id, type="website", url=f"https://example{i}.com")
+
+    # Test first page
+    page_1 = context.list_web_properties(influencer_id=influencer.id, page=1, per_page=5)
+    assert len(page_1) == 5
+    assert page_1[0].url == "https://example0.com"
+    assert page_1[4].url == "https://example4.com"
+
+    # Test second page
+    page_2 = context.list_web_properties(influencer_id=influencer.id, page=2, per_page=5)
+    assert len(page_2) == 5
+    assert page_2[0].url == "https://example5.com"
+    assert page_2[4].url == "https://example9.com"
+
+    # Test last page (should have fewer items)
+    page_3 = context.list_web_properties(influencer_id=influencer.id, page=3, per_page=5)
+    assert len(page_3) == 5
+    assert page_3[0].url == "https://example10.com"
+    assert page_3[4].url == "https://example14.com"
+
+    # Test page beyond available data
+    page_4 = context.list_web_properties(influencer_id=influencer.id, page=4, per_page=5)
+    assert len(page_4) == 0
+
+    # Test with different page size
+    page_large = context.list_web_properties(influencer_id=influencer.id, page=1, per_page=20)
+    assert len(page_large) == 15
+
+    # Verify total count hasn't changed
+    total_count = context.count_web_properties(influencer_id=influencer.id)
+    assert total_count == 15

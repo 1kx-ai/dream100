@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 
 class WebPropertyType(str, Enum):
     FACEBOOK = "facebook"
@@ -27,4 +27,11 @@ class WebProperty(WebPropertyBase):
     id: int
 
     class Config:
-        orm_mode: True
+        orm_mode = True
+
+class PaginatedWebProperties(BaseModel):
+    items: List[WebProperty]
+    total: int
+    page: int
+    per_page: int
+    pages: int

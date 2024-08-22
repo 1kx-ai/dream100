@@ -35,7 +35,7 @@ class ContentEmbeddingContext:
                 raise e
         return False
 
-    def search_similar_content(self, query_embedding, limit=5):
+    def search_similar_content(self, query_embedding, limit=5, offset=0):
         stmt = (
             select(
                 ContentEmbedding,
@@ -46,6 +46,7 @@ class ContentEmbeddingContext:
             )
             .join(Content)
             .order_by(ContentEmbedding.embedding.cosine_distance(query_embedding))
+            .offset(offset)
             .limit(limit)
         )
         return self.session.execute(stmt).fetchall()

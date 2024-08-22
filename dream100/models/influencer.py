@@ -35,7 +35,7 @@ class Influencer(Base):
     projects = relationship(
         "Project", secondary=influencer_project, back_populates="influencers"
     )
-    web_properties = relationship("WebProperty", back_populates="influencer")
+    web_properties = relationship("WebProperty", back_populates="influencer", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Influencer(id={self.id}, name='{self.name}')>"

@@ -12,6 +12,7 @@ from dream100.models.project import Project
 from dream100.models.influencer import Influencer
 from dream100.models.web_property import WebProperty, WebPropertyType
 from dream100.models.content import Content, ContentStatus
+from dream100.models.content_embedding import ContentEmbedding
 from dream100.utilities import model as original_model
 from tests.mocks.mock_model import MockEmbeddingModel
 
@@ -106,6 +107,7 @@ def create_influencer(db_session):
         db_session.commit()
         db_session.refresh(influencer)
         return influencer
+
     return _create_influencer
 
 
@@ -159,3 +161,24 @@ def create_content(db_session, create_web_property):
         return content
 
     return _create_content
+
+
+@pytest.fixture(scope="function")
+def create_content_embedding(db_session, create_content):
+    def _create_content_embedding(
+        content_id=None, chunk_text="Test chunk text", embedding=None
+    ):
+        if not content_id:
+            content = create_content()
+            content_id = content.id
+        if embedding is None:
+            embedding = create_float_array(384)
+        content_embedding = ContentEmbedding(
+            content_id=content_id, chunk_text=chunk_text, embedding=embedding
+        )
+        db_session.add(content_embedding)
+        db_session.commit()
+        db_session.refresh(content_embedding)
+        return content_embedding
+
+    return _create_content_embedding

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { influencersApi } from '../services/influencersApi';
 import Modal from '../components/common/Modal';
 import Table from '../components/common/Table';
+import InfluencerForm from '../components/InfluencerForm';
 
 const InfluencersPage = () => {
   const [influencers, setInfluencers] = useState([]);
@@ -98,29 +99,6 @@ const InfluencersPage = () => {
     },
   ];
 
-  const renderForm = () => (
-    <form onSubmit={handleSubmit}>
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">Influencer Name</span>
-        </label>
-        <input
-          type="text"
-          name="name"
-          defaultValue={currentInfluencer?.name || ''}
-          placeholder="Enter influencer name"
-          className="input input-bordered"
-          required
-        />
-      </div>
-      <div className="modal-action">
-        <button type="submit" className="btn btn-primary">
-          {currentInfluencer ? 'Update' : 'Create'} Influencer
-        </button>
-      </div>
-    </form>
-  );
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
@@ -151,7 +129,10 @@ const InfluencersPage = () => {
         onClose={() => setIsModalOpen(false)}
         title={currentInfluencer ? 'Edit Influencer' : 'Add New Influencer'}
       >
-        {renderForm()}
+        <InfluencerForm
+          currentInfluencer={currentInfluencer}
+          onSubmit={handleSubmit}
+        />
       </Modal>
     </div>
   );

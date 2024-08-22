@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from dream100.db_config import get_db
@@ -9,7 +9,7 @@ from dream100_api.schemas.influencer import (
     InfluencerUpdate,
 )
 from dream100_api.auth.dependencies import get_current_user
-from dream100.commands import process_new_influencer
+from dream100.commands.process_new_influencer import process_new_influencer
 import pytest
 
 router = APIRouter()
@@ -33,6 +33,7 @@ async def list_influencers(
 )
 async def create_influencer(
     influencer: InfluencerCreate,
+    background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -40,6 +41,10 @@ async def create_influencer(
     new_influencer = influencer_context.create_influencer(
         name=influencer.name, project_ids=influencer.project_ids
     )
+    
+    # Schedule the process_new_influencer task to run in the background
+    background_tasks.add_task(process_new_influencer, db, new_influencer.id)
+    
     return add_project_ids_to_influencer(new_influencer)
 
 

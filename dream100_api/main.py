@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .auth.bearer_auth import BearerAuth
 from .auth.middleware import AuthMiddleware
-from .routers import projects, influencers, web_properties
+from .routers import projects, influencers, web_properties, content_embeddings
 
 app = FastAPI()
 
@@ -23,5 +23,5 @@ app.add_middleware(AuthMiddleware, auth_provider=auth_provider)
 # Include routers
 app.include_router(projects.router)
 app.include_router(influencers.router)
-
 app.include_router(web_properties.router)
+app.include_router(content_embeddings.router)

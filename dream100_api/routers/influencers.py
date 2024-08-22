@@ -9,6 +9,7 @@ from dream100_api.schemas.influencer import (
     InfluencerUpdate,
 )
 from dream100_api.auth.dependencies import get_current_user
+from dream100.commands import process_new_influencer
 import pytest
 
 router = APIRouter()
@@ -16,9 +17,11 @@ router = APIRouter()
 
 @router.get("/influencers", response_model=List[Influencer])
 async def list_influencers(
-    project_id: Optional[int] = Query(None, description="Filter influencers by project ID"),
+    project_id: Optional[int] = Query(
+        None, description="Filter influencers by project ID"
+    ),
     current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     influencer_context = InfluencerContext(db)
     influencers = influencer_context.list_influencers(project_id=project_id)

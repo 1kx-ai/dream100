@@ -5,6 +5,7 @@ from dream100.db_config import get_db
 from dream100_api.schemas.content_embedding import (
     ContentEmbedding,
     ContentEmbeddingSearch,
+    PaginatedContentEmbeddings,
 )
 from dream100.context.content_embeddings import ContentEmbeddingContext
 from dream100_api.auth.dependencies import get_current_user
@@ -13,13 +14,13 @@ from dream100.utilities.embedding_utils import create_embedding
 router = APIRouter()
 
 
-@router.get("/content_embeddings/list", response_model=List[ContentEmbedding])
+@router.get("/content_embeddings/list", response_model=PaginatedContentEmbeddings)
 async def list_content_embeddings(
     search: Optional[str] = Query(None, description="Search query"),
     query: Optional[str] = Query(None, description="Query for semantic search"),
     content_id: Optional[int] = Query(None, description="Filter by content ID"),
-    offset: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
+    page: int = Query(1, ge=1, description="Page number"),
+    per_page: int = Query(10, ge=1, le=100, description="Items per page"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -33,11 +34,18 @@ async def list_content_embeddings(
         content_id=content_id,
         query_embedding=query_embedding,
         search=search,
-        offset=offset,
-        limit=limit,
+        page=page,
+        per_page=per_page,
     )
+
+    total_count = context.get_embedding_count(content_id=content_id)
 
     if not embeddings:
         raise HTTPException(status_code=404, detail="No content embeddings found")
 
-    return embeddings
+    return PaginatedContentEmbeddings(
+        items=embeddings,
+        total=total_count,
+        page=page,
+        per_page=per_page,
+    )

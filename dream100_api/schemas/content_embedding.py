@@ -28,3 +28,10 @@ class ContentEmbeddingSearch(BaseModel):
     query_embedding: List[float]
     limit: int = 5
     offset: int = 0
+
+
+class PaginatedContentEmbeddings(BaseModel):
+    items: List[ContentEmbedding]
+    total: int
+    page: int
+    per_page: int

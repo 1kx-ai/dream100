@@ -35,22 +35,6 @@ class ContentEmbeddingContext:
                 raise e
         return False
 
-    def search_similar_content(self, query_embedding, limit=5, offset=0):
-        stmt = (
-            select(
-                ContentEmbedding,
-                Content.link,
-                ContentEmbedding.embedding.cosine_distance(query_embedding).label(
-                    "distance"
-                ),
-            )
-            .join(Content)
-            .order_by(ContentEmbedding.embedding.cosine_distance(query_embedding))
-            .offset(offset)
-            .limit(limit)
-        )
-        return self.session.execute(stmt).fetchall()
-
     def get_embeddings_for_content(self, content_id):
         stmt = select(ContentEmbedding).filter_by(content_id=content_id)
         return self.session.scalars(stmt).all()
@@ -70,12 +54,23 @@ class ContentEmbeddingContext:
                 raise e
         return None
 
-    def list_embeddings(self, content_id=None, offset=0, limit=100):
-        stmt = select(ContentEmbedding)
+    def list_embeddings(
+        self, content_id=None, query_embedding=None, page=0, per_page=100
+    ):
+        query = self.session.query(ContentEmbedding)
+
         if content_id is not None:
-            stmt = stmt.filter_by(content_id=content_id)
-        stmt = stmt.offset(offset).limit(limit)
-        return self.session.scalars(stmt).all()
+            query = query.filter(ContentEmbedding.content_id == content_id)
+
+        if query_embedding is not None:
+            query = query.order_by(
+                ContentEmbedding.embedding.cosine_distance(query_embedding)
+            )
+
+        if page is not None and per_page is not None:
+            query = query.offset((page - 1) * per_page).limit(per_page)
+
+        return query.all()
 
     def get_embedding_count(self, content_id=None):
         stmt = select(func.count()).select_from(ContentEmbedding)

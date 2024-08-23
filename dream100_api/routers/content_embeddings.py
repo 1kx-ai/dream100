@@ -34,7 +34,7 @@ async def list_content_embeddings(
         query_embedding=query_embedding,
         search=search,
         offset=offset,
-        limit=limit
+        limit=limit,
     )
 
     if not embeddings:

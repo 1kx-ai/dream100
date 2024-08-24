@@ -1,6 +1,20 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import { ChevronUp, ChevronDown, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, Search } from 'lucide-react';
-import debounce from 'lodash/debounce';
+
+// Custom debounce function
+const useDebounce = (callback, delay) => {
+  const timeoutRef = useRef(null);
+
+  return useCallback((...args) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  }, [callback, delay]);
+};
 
 const Table = ({
   data,
@@ -27,14 +41,10 @@ const Table = ({
     }
   };
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchTerm(value);
-        setCurrentPage(1);
-      }, 300),
-    []
-  );
+  const debouncedSearch = useDebounce((value) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  }, 300);
 
   const handleSearch = (event) => {
     debouncedSearch(event.target.value);

@@ -88,7 +88,11 @@ class ContentContext:
         influencer_id=None,
         batch_size=None,
     ):
-        query = self.session.query(Content).join(Content.web_property).join(WebProperty.influencer)
+        query = (
+            self.session.query(Content)
+            .join(Content.web_property)
+            .join(WebProperty.influencer)
+        )
 
         if influencer_id is not None:
             query = query.join(WebProperty.influencer).filter(
@@ -130,24 +134,34 @@ class ContentContext:
         query = self.list_contents_query(**kwargs)
         yield from self.session.execute(query).scalars().yield_per(batch_size)
 
-    def search_contents(self, query_text, limit=10):
-        # Generate embedding for the query text
-        query_embedding = create_embedding(query_text)
-
-        # Perform the vector similarity search
-        results = (
+    def search_contents(self, query_embedding, per_page=10, page=0):
+        # Perform the vector similarity search with pagination
+        query = (
             self.session.query(
                 Content,
-                func.l2_distance(Content.embedding, cast(query_embedding, Vector)).label('distance')
+                func.l2_distance(
+                    Content.embedding, cast(query_embedding, Vector)
+                ).label("distance"),
             )
             .filter(Content.embedding.isnot(None))
-            .order_by('distance')
-            .limit(limit)
-            .all()
+            .order_by("distance")
+            .offset((page - 1) * per_page)
+            .limit(per_page)
         )
 
+        results = query.all()
+
         # Format the results
-        return [
-            {'content': content, 'distance': float(distance)}
+        contents = [
+            {"content": content, "distance": float(distance)}
             for content, distance in results
         ]
+
+        total_count = query.count()
+
+        return {
+            "contents": contents,
+            "total_count": total_count,
+            "page": page,
+            "per_page": per_page,
+        }

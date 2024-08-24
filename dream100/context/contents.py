@@ -3,7 +3,11 @@ from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty
 from sqlalchemy import select, func
 from dream100.models.influencer import Influencer
+from sqlalchemy.sql.expression import cast
+from sqlalchemy import Float
+from pgvector.sqlalchemy import Vector
 import logging
+from dream100.utilities.embedding_utils import create_embedding
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -125,3 +129,25 @@ class ContentContext:
     def iter_contents(self, batch_size=100, **kwargs):
         query = self.list_contents_query(**kwargs)
         yield from self.session.execute(query).scalars().yield_per(batch_size)
+
+    def search_contents(self, query_text, limit=10):
+        # Generate embedding for the query text
+        query_embedding = create_embedding(query_text)
+
+        # Perform the vector similarity search
+        results = (
+            self.session.query(
+                Content,
+                func.l2_distance(Content.embedding, cast(query_embedding, Vector)).label('distance')
+            )
+            .filter(Content.embedding.isnot(None))
+            .order_by('distance')
+            .limit(limit)
+            .all()
+        )
+
+        # Format the results
+        return [
+            {'content': content, 'distance': float(distance)}
+            for content, distance in results
+        ]

@@ -82,17 +82,17 @@ const Table = ({
   return (
     <div className={`overflow-x-auto ${customClasses.wrapper || ''}`}>
       {showSearch && (
-        <div className="mb-4">
-          <div className="form-control">
-            <div className="input-group">
+        <div className="mb-4 w-full">
+          <div className="form-control w-full">
+            <div className="input-group w-full">
               <input
                 type="text"
                 placeholder="Search..."
-                className="input input-bordered"
+                className="input input-bordered flex-grow"
                 value={searchTerm}
                 onChange={handleSearch}
               />
-              <button className="btn btn-square">
+              <button className="btn">
                 <Search size={20} />
               </button>
             </div>

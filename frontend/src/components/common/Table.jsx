@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { ChevronUp, ChevronDown, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, Search } from 'lucide-react';
+import debounce from 'lodash/debounce';
 
 const Table = ({
   data,
@@ -15,8 +16,9 @@ const Table = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
+  const [loadingRows, setLoadingRows] = useState({});
 
-  const handleSort = (column) => {
+  const handleSort = useCallback((column) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -25,38 +27,51 @@ const Table = ({
     }
   };
 
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((value) => {
+        setSearchTerm(value);
+        setCurrentPage(1);
+      }, 300),
+    []
+  );
+
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-    setCurrentPage(1);
+    debouncedSearch(event.target.value);
   };
 
-  const handleRowSelect = (id) => {
+  const handleRowSelect = useCallback((id) => {
     setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
     );
   };
 
-  const filteredData = showSearch
-    ? data.filter((row) =>
-      Object.values(row).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    )
-    : data;
+  const filteredAndSortedData = useMemo(() => {
+    let result = showSearch
+      ? data.filter((row) =>
+          Object.values(row).some((value) =>
+            value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        )
+      : data;
 
-  const sortedData = [...filteredData].sort((a, b) => {
-    if (!sortColumn) return 0;
-    const aValue = a[sortColumn];
-    const bValue = b[sortColumn];
-    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-    return 0;
-  });
+    if (sortColumn) {
+      result.sort((a, b) => {
+        const aValue = a[sortColumn];
+        const bValue = b[sortColumn];
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
 
-  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+    return result;
+  }, [data, showSearch, searchTerm, sortColumn, sortDirection]);
+
+  const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = sortedData.slice(startIndex, endIndex);
+  const currentData = filteredAndSortedData.slice(startIndex, endIndex);
 
   const renderSortIcon = (column) => {
     if (sortColumn !== column) return null;
@@ -99,10 +114,11 @@ const Table = ({
           </div>
         </div>
       )}
-      <table className={`table table-zebra w-full ${customClasses.table || ''}`}>
-        <thead>
-          <tr>
-            <th>
+      <div className="overflow-x-auto">
+        <table className={`table table-zebra w-full ${customClasses.table || ''}`}>
+          <thead>
+            <tr>
+              <th className="w-10">
               <label>
                 <input
                   type="checkbox"
@@ -132,15 +148,16 @@ const Table = ({
             ))}
           </tr>
         </thead>
-        <tbody>
-          {currentData.map((row) => (
-            <tr
-              key={row.id}
-              onClick={() => onRowClick && onRowClick(row)}
-              className={`${onRowClick ? 'cursor-pointer hover:bg-base-200' : ''} ${customClasses.tr || ''
+          <tbody>
+            {currentData.map((row) => (
+              <tr
+                key={row.id}
+                onClick={() => onRowClick && onRowClick(row)}
+                className={`${onRowClick ? 'cursor-pointer hover:bg-base-200' : ''} ${
+                  customClasses.tr || ''
                 }`}
-            >
-              <td>
+              >
+                <td className="w-10">
                 <label>
                   <input
                     type="checkbox"
@@ -151,15 +168,22 @@ const Table = ({
                   />
                 </label>
               </td>
-              {columns.map((column) => (
-                <td key={column.key} className={customClasses.td || ''}>
-                  {column.render ? column.render(row[column.key], row) : row[column.key]}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                {columns.map((column) => (
+                  <td key={column.key} className={customClasses.td || ''}>
+                    {loadingRows[row.id] ? (
+                      <div className="loading loading-spinner loading-sm"></div>
+                    ) : column.render ? (
+                      column.render(row[column.key], row)
+                    ) : (
+                      row[column.key]
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm">
@@ -199,6 +223,32 @@ const Table = ({
       </div>
     </div>
   );
+};
+
+const useKeyboardNavigation = (totalPages, currentPage, setCurrentPage) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          setCurrentPage((prev) => Math.max(prev - 1, 1));
+          break;
+        case 'ArrowRight':
+          setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+          break;
+        case 'Home':
+          setCurrentPage(1);
+          break;
+        case 'End':
+          setCurrentPage(totalPages);
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [totalPages, setCurrentPage]);
 };
 
 export default Table;

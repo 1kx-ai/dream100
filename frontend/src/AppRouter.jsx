@@ -48,7 +48,7 @@ const AppRouter = () => {
             <Route path="/influencers" element={<PrivateRoute><InfluencersPage /></PrivateRoute>} />
             <Route path="/projects" element={<PrivateRoute><ProjectsPage /></PrivateRoute>} />
             <Route path="/contents" element={<PrivateRoute><ContentsPage /></PrivateRoute>} />
-            <Route path="/content/:id" element={<PrivateRoute><ContentView /></PrivateRoute>} />
+            <Route path="/content/:id" element={<PrivateRoute><ContentPage /></PrivateRoute>} />
           </Route>
         </Routes>
       </Suspense>

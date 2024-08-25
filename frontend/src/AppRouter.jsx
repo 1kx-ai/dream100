@@ -6,6 +6,7 @@ import ProjectsPage from './pages/ProjectsPage';
 import ProjectSelectorPage from './pages/ProjectSelectorPage';
 import AuthPage from './pages/AuthPage';
 import ContentsPage from './pages/ContentsPage';
+import ContentView from './components/ContentView';
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('API_TOKEN');
@@ -47,6 +48,7 @@ const AppRouter = () => {
             <Route path="/influencers" element={<PrivateRoute><InfluencersPage /></PrivateRoute>} />
             <Route path="/projects" element={<PrivateRoute><ProjectsPage /></PrivateRoute>} />
             <Route path="/contents" element={<PrivateRoute><ContentsPage /></PrivateRoute>} />
+            <Route path="/content/:id" element={<PrivateRoute><ContentView /></PrivateRoute>} />
           </Route>
         </Routes>
       </Suspense>

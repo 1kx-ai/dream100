@@ -1,5 +1,6 @@
 from FlagEmbedding import FlagICLModel
 
+
 class EmbeddingModel:
     _instance = None
 

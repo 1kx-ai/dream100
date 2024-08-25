@@ -140,10 +140,10 @@ class ContentContext:
             self.session.query(
                 Content,
                 func.l2_distance(
-                    Content.embedding, cast(query_embedding, Vector)
+                    Content.embeddings, cast(query_embedding, Vector)
                 ).label("distance"),
             )
-            .filter(Content.embedding.isnot(None))
+            .filter(Content.embeddings.isnot(None))
             .order_by("distance")
             .offset((page - 1) * per_page)
             .limit(per_page)

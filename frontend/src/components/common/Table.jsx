@@ -26,6 +26,7 @@ const Table = ({
   showSearch = true,
   onSearch, // New prop for search callback
 }) => {
+  console.log(data)
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +41,7 @@ const Table = ({
       setSortColumn(column);
       setSortDirection('asc');
     }
-  };
+  });
 
   const debouncedSearch = useDebounce((value) => {
     setSearchTerm(value);
@@ -59,15 +60,15 @@ const Table = ({
     setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
     );
-  };
+  });
 
   const filteredAndSortedData = useMemo(() => {
     let result = showSearch
       ? data.filter((row) =>
-          Object.values(row).some((value) =>
-            value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-          )
+        Object.values(row).some((value) =>
+          value.toString().toLowerCase().includes(searchTerm.toLowerCase())
         )
+      )
       : data;
 
     if (sortColumn) {
@@ -134,55 +135,54 @@ const Table = ({
           <thead>
             <tr>
               <th className="w-10">
-              <label>
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={selectedRows.length === currentData.length}
-                  onChange={() =>
-                    setSelectedRows(
-                      selectedRows.length === currentData.length
-                        ? []
-                        : currentData.map((row) => row.id)
-                    )
-                  }
-                />
-              </label>
-            </th>
-            {columns.map((column) => (
-              <th
-                key={column.key}
-                onClick={() => handleSort(column.key)}
-                className={`cursor-pointer hover:bg-base-200 ${customClasses.th || ''}`}
-              >
-                <div className="flex items-center">
-                  {column.label}
-                  {renderSortIcon(column.key)}
-                </div>
+                <label>
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={selectedRows.length === currentData.length}
+                    onChange={() =>
+                      setSelectedRows(
+                        selectedRows.length === currentData.length
+                          ? []
+                          : currentData.map((row) => row.id)
+                      )
+                    }
+                  />
+                </label>
               </th>
-            ))}
-          </tr>
-        </thead>
+              {columns.map((column) => (
+                <th
+                  key={column.key}
+                  onClick={() => handleSort(column.key)}
+                  className={`cursor-pointer hover:bg-base-200 ${customClasses.th || ''}`}
+                >
+                  <div className="flex items-center">
+                    {column.label}
+                    {renderSortIcon(column.key)}
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
           <tbody>
             {currentData.map((row) => (
               <tr
                 key={row.id}
                 onClick={() => onRowClick && onRowClick(row)}
-                className={`${onRowClick ? 'cursor-pointer hover:bg-base-200' : ''} ${
-                  customClasses.tr || ''
-                }`}
+                className={`${onRowClick ? 'cursor-pointer hover:bg-base-200' : ''} ${customClasses.tr || ''
+                  }`}
               >
                 <td className="w-10">
-                <label>
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={selectedRows.includes(row.id)}
-                    onChange={() => handleRowSelect(row.id)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </label>
-              </td>
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      checked={selectedRows.includes(row.id)}
+                      onChange={() => handleRowSelect(row.id)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </label>
+                </td>
                 {columns.map((column) => (
                   <td key={column.key} className={customClasses.td || ''}>
                     {loadingRows[row.id] ? (

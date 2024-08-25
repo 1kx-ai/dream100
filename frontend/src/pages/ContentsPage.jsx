@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { contentsApi } from '../services/contentsApi';
 import Table from '../components/common/Table';
+import SearchInput from '../components/common/SearchInput';
 
 const ContentsPage = () => {
   const [contents, setContents] = useState([]);
@@ -66,6 +67,10 @@ const ContentsPage = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Contents</h1>
 
+      <div className="mb-4">
+        <SearchInput onSearch={handleSearch} />
+      </div>
+
       {error && <div className="alert alert-error mb-4">{error}</div>}
 
       <Table
@@ -75,8 +80,6 @@ const ContentsPage = () => {
         currentPage={currentPage}
         itemsPerPage={itemsPerPage}
         loading={isLoading}
-        showSearch={true}
-        onSearch={handleSearch}
         onSort={handleSort}
         onPageChange={handlePageChange}
         customClasses={{

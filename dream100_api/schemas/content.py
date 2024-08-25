@@ -47,12 +47,12 @@ class ContentSearchResult(BaseModel):
 class ContentSearchResponse(BaseModel):
     contents: List[ContentSearchResult]
     total_count: int
-    offset: int
-    limit: int
+    page: int
+    per_page: int
 
 
 class ContentPage(BaseModel):
     items: List[Content]
     total_count: int
-    offset: int
-    limit: int
+    page: int
+    per_page: int

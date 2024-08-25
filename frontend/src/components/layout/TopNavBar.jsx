@@ -15,6 +15,7 @@ const TopNavBar = () => {
         <Link to="/" className="btn btn-ghost normal-case text-xl">Home</Link>
         <Link to="/projects" className="btn btn-ghost normal-case text-xl">Projects</Link>
         <Link to="/influencers" className="btn btn-ghost normal-case text-xl">Influencers</Link>
+        <Link to="/contents" className="btn btn-ghost normal-case text-xl">Content</Link>
       </div>
       <div className="flex-none">
         <Link to="/select-project" className="btn btn-primary">

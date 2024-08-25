@@ -1,8 +1,9 @@
 from sqlalchemy.exc import SQLAlchemyError
 from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty
-from sqlalchemy import select, func
+from dream100.models.content_embedding import ContentEmbedding
 from dream100.models.influencer import Influencer
+from sqlalchemy import select, func
 from sqlalchemy.sql.expression import cast
 from sqlalchemy import Float
 from pgvector.sqlalchemy import Vector
@@ -139,13 +140,16 @@ class ContentContext:
         query = (
             self.session.query(
                 Content,
-                func.l2_distance(
-                    Content.embeddings, cast(query_embedding, Vector)
+                func.min(
+                    func.l2_distance(
+                        ContentEmbedding.embedding, cast(query_embedding, Vector)
+                    )
                 ).label("distance"),
             )
-            .filter(Content.embeddings.isnot(None))
+            .join(Content.embeddings)
+            .group_by(Content.id)
             .order_by("distance")
-            .offset((page - 1) * per_page)
+            .offset(page * per_page)
             .limit(per_page)
         )
 
@@ -157,7 +161,10 @@ class ContentContext:
             for content, distance in results
         ]
 
-        total_count = query.count()
+        # Get total count
+        total_count = (
+            self.session.query(Content).join(Content.embeddings).distinct().count()
+        )
 
         return {
             "contents": contents,

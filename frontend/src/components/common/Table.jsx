@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { ChevronUp, ChevronDown, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-react';
-import SearchInput from './SearchInput';
 
 const Table = ({
   data,
@@ -11,8 +10,6 @@ const Table = ({
   onRowClick,
   customClasses = {},
   loading = false,
-  showSearch = true,
-  onSearch,
   onSort,
   onPageChange,
 }) => {
@@ -59,11 +56,6 @@ const Table = ({
 
   return (
     <div className={`overflow-x-auto ${customClasses.wrapper || ''}`}>
-      {showSearch && (
-        <div className="mb-4 w-full">
-          <SearchInput onSearch={onSearch} />
-        </div>
-      )}
       <div className="overflow-x-auto">
         <table className={`table table-zebra w-full ${customClasses.table || ''}`}>
           <thead>

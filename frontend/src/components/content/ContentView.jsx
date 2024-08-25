@@ -51,7 +51,9 @@ const ContentView = () => {
         <label className="label">
           <span className="label-text font-bold">Scraped Content:</span>
         </label>
-        <textarea className="textarea textarea-bordered h-24" value={content.scraped_content} readOnly />
+        <div className="p-2 bg-base-200 rounded-lg overflow-auto max-h-48">
+          {content.scraped_content}
+        </div>
       </div>
     </div>
   );

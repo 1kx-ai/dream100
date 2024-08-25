@@ -6,7 +6,7 @@ import ProjectsPage from './pages/ProjectsPage';
 import ProjectSelectorPage from './pages/ProjectSelectorPage';
 import AuthPage from './pages/AuthPage';
 import ContentsPage from './pages/ContentsPage';
-import ContentView from './components/ContentView';
+import ContentPage from './components/content/ContentPage';
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('API_TOKEN');

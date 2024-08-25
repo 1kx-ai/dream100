@@ -10,4 +10,7 @@ export const contentsApi = {
     
     return api.get(url);
   },
+  getContent: (contentId) => {
+    return api.get(`/content/${contentId}`);
+  },
 };

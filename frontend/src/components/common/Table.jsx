@@ -15,6 +15,7 @@ const Table = ({
   onSort,
   onPageChange,
 }) => {
+  print(data)
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [selectedRows, setSelectedRows] = useState([]);
@@ -50,7 +51,9 @@ const Table = ({
     );
   }
 
-  if (data.length === 0) {
+  print(data)
+
+  if (data?.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-xl text-gray-500">No data available</p>
@@ -88,12 +91,12 @@ const Table = ({
                   <input
                     type="checkbox"
                     className="checkbox"
-                    checked={selectedRows.length === data.length}
+                    checked={selectedRows.length === data?.length}
                     onChange={() =>
                       setSelectedRows(
-                        selectedRows.length === data.length
+                        selectedRows.length === data?.length
                           ? []
-                          : data.map((row) => row.id)
+                          : data?.map((row) => row.id)
                       )
                     }
                   />
@@ -114,7 +117,7 @@ const Table = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((row) => (
+            {data?.map((row) => (
               <tr
                 key={row.id}
                 onClick={() => onRowClick && onRowClick(row)}

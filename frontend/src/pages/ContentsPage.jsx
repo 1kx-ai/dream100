@@ -12,12 +12,28 @@ const ContentsPage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [sortColumn, setSortColumn] = useState('id');
   const [sortDirection, setSortDirection] = useState('asc');
+  const [currentProjectId, setCurrentProjectId] = useState(null);
+  const [currentProjectName, setCurrentProjectName] = useState('');
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    const projectId = localStorage.getItem('currentProjectId');
+    const projectName = localStorage.getItem('currentProjectName');
+    setCurrentProjectId(projectId ? parseInt(projectId) : null);
+    setCurrentProjectName(projectName || 'All Projects');
+  }, []);
 
   const fetchContents = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await contentsApi.searchContents(searchQuery, itemsPerPage, (currentPage - 1) * itemsPerPage, sortColumn, sortDirection);
+      const response = await contentsApi.searchContents(
+        searchQuery,
+        itemsPerPage,
+        (currentPage - 1) * itemsPerPage,
+        sortColumn,
+        sortDirection,
+        currentProjectId
+      );
       setContents(response.results);
       setTotalItems(response.count);
       setError(null);
@@ -65,7 +81,7 @@ const ContentsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Contents</h1>
+      <h1 className="text-3xl font-bold mb-6">Contents - {currentProjectName}</h1>
 
       <div className="mb-4">
         <SearchInput onSearch={handleSearch} />

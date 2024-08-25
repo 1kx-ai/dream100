@@ -6,6 +6,7 @@ const ContentView = () => {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [copySuccess, setCopySuccess] = useState('');
   const { id } = useParams();
 
   useEffect(() => {
@@ -22,6 +23,16 @@ const ContentView = () => {
 
     fetchContent();
   }, [id]);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(content.scraped_content);
+      setCopySuccess('Copied!');
+      setTimeout(() => setCopySuccess(''), 2000);
+    } catch (err) {
+      setCopySuccess('Failed to copy');
+    }
+  };
 
   if (loading) return <div className="loading loading-spinner loading-lg"></div>;
   if (error) return <div className="alert alert-error">{error}</div>;
@@ -50,8 +61,11 @@ const ContentView = () => {
       <div className="form-control md:col-span-2">
         <label className="label">
           <span className="label-text font-bold">Scraped Content:</span>
+          <button onClick={copyToClipboard} className="btn btn-sm btn-outline">
+            {copySuccess || 'Copy'}
+          </button>
         </label>
-        <div className="p-2 bg-base-200 rounded-lg overflow-auto max-h-48">
+        <div className="p-2 bg-base-200 rounded-lg whitespace-pre-wrap">
           {content.scraped_content}
         </div>
       </div>

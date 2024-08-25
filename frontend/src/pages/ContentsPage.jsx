@@ -7,12 +7,18 @@ const ContentsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [sortColumn, setSortColumn] = useState('id');
+  const [sortDirection, setSortDirection] = useState('asc');
+  const itemsPerPage = 10;
 
-  const fetchContents = useCallback(async (query) => {
+  const fetchContents = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await contentsApi.searchContents(query);
+      const response = await contentsApi.searchContents(searchQuery, itemsPerPage, (currentPage - 1) * itemsPerPage, sortColumn, sortDirection);
       setContents(response.results);
+      setTotalItems(response.count);
       setError(null);
     } catch (err) {
       setError('Failed to fetch contents. Please try again later.');
@@ -20,14 +26,24 @@ const ContentsPage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [searchQuery, currentPage, sortColumn, sortDirection]);
 
   useEffect(() => {
-    fetchContents(searchQuery);
-  }, [fetchContents, searchQuery]);
+    fetchContents();
+  }, [fetchContents]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
+    setCurrentPage(1);
+  };
+
+  const handleSort = (column, direction) => {
+    setSortColumn(column);
+    setSortDirection(direction);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const columns = [
@@ -55,10 +71,14 @@ const ContentsPage = () => {
       <Table
         data={contents}
         columns={columns}
-        itemsPerPage={10}
+        totalItems={totalItems}
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
         loading={isLoading}
         showSearch={true}
         onSearch={handleSearch}
+        onSort={handleSort}
+        onPageChange={handlePageChange}
         customClasses={{
           wrapper: 'shadow-lg',
           table: 'table-zebra',

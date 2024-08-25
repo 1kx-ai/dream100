@@ -1,93 +1,41 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ChevronUp, ChevronDown, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, Search } from 'lucide-react';
-
-// Custom debounce function
-const useDebounce = (callback, delay) => {
-  const timeoutRef = useRef(null);
-
-  return useCallback((...args) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    timeoutRef.current = setTimeout(() => {
-      callback(...args);
-    }, delay);
-  }, [callback, delay]);
-};
 
 const Table = ({
   data,
   columns,
-  itemsPerPage = 10,
+  totalItems,
+  currentPage,
+  itemsPerPage,
   onRowClick,
   customClasses = {},
   loading = false,
   showSearch = true,
-  onSearch, // New prop for search callback
+  onSearch,
+  onSort,
+  onPageChange,
 }) => {
-  console.log(data)
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
-  const [loadingRows, setLoadingRows] = useState({});
 
   const handleSort = useCallback((column) => {
-    if (sortColumn === column) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortColumn(column);
-      setSortDirection('asc');
-    }
-  });
-
-  const debouncedSearch = useDebounce((value) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
-  }, 300);
+    const newDirection = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';
+    setSortColumn(column);
+    setSortDirection(newDirection);
+    onSort(column, newDirection);
+  }, [sortColumn, sortDirection, onSort]);
 
   const handleSearch = (event) => {
     const value = event.target.value;
-    debouncedSearch(value);
-    if (onSearch) {
-      onSearch(value);
-    }
+    onSearch(value);
   };
 
   const handleRowSelect = useCallback((id) => {
     setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
     );
-  });
-
-  const filteredAndSortedData = useMemo(() => {
-    let result = showSearch
-      ? data.filter((row) =>
-        Object.values(row).some((value) =>
-          value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      )
-      : data;
-
-    if (sortColumn) {
-      result.sort((a, b) => {
-        const aValue = a[sortColumn];
-        const bValue = b[sortColumn];
-        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
-      });
-    }
-
-    return result;
-  }, [data, showSearch, searchTerm, sortColumn, sortDirection]);
-
-  const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = filteredAndSortedData.slice(startIndex, endIndex);
+  }, []);
 
   const renderSortIcon = (column) => {
     if (sortColumn !== column) return null;
@@ -110,6 +58,8 @@ const Table = ({
     );
   }
 
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
   return (
     <div className={`overflow-x-auto ${customClasses.wrapper || ''}`}>
       {showSearch && (
@@ -120,7 +70,6 @@ const Table = ({
                 type="text"
                 placeholder="Search..."
                 className="input input-bordered flex-grow"
-                value={searchTerm}
                 onChange={handleSearch}
               />
               <button className="btn">
@@ -139,12 +88,12 @@ const Table = ({
                   <input
                     type="checkbox"
                     className="checkbox"
-                    checked={selectedRows.length === currentData.length}
+                    checked={selectedRows.length === data.length}
                     onChange={() =>
                       setSelectedRows(
-                        selectedRows.length === currentData.length
+                        selectedRows.length === data.length
                           ? []
-                          : currentData.map((row) => row.id)
+                          : data.map((row) => row.id)
                       )
                     }
                   />
@@ -165,12 +114,11 @@ const Table = ({
             </tr>
           </thead>
           <tbody>
-            {currentData.map((row) => (
+            {data.map((row) => (
               <tr
                 key={row.id}
                 onClick={() => onRowClick && onRowClick(row)}
-                className={`${onRowClick ? 'cursor-pointer hover:bg-base-200' : ''} ${customClasses.tr || ''
-                  }`}
+                className={`${onRowClick ? 'cursor-pointer hover:bg-base-200' : ''} ${customClasses.tr || ''}`}
               >
                 <td className="w-10">
                   <label>
@@ -185,13 +133,7 @@ const Table = ({
                 </td>
                 {columns.map((column) => (
                   <td key={column.key} className={customClasses.td || ''}>
-                    {loadingRows[row.id] ? (
-                      <div className="loading loading-spinner loading-sm"></div>
-                    ) : column.render ? (
-                      column.render(row[column.key], row)
-                    ) : (
-                      row[column.key]
-                    )}
+                    {column.render ? column.render(row[column.key], row) : row[column.key]}
                   </td>
                 ))}
               </tr>
@@ -202,19 +144,19 @@ const Table = ({
 
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm">
-          Showing {startIndex + 1} to {Math.min(endIndex, sortedData.length)} of {sortedData.length} entries
+          Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
         </span>
         <div className="btn-group">
           <button
             className="btn btn-sm"
-            onClick={() => setCurrentPage(1)}
+            onClick={() => onPageChange(1)}
             disabled={currentPage === 1}
           >
             <ChevronsLeft size={16} />
           </button>
           <button
             className="btn btn-sm"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
             <ChevronLeft size={16} />
@@ -222,14 +164,14 @@ const Table = ({
           <button className="btn btn-sm">Page {currentPage} of {totalPages}</button>
           <button
             className="btn btn-sm"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
             <ChevronRight size={16} />
           </button>
           <button
             className="btn btn-sm"
-            onClick={() => setCurrentPage(totalPages)}
+            onClick={() => onPageChange(totalPages)}
             disabled={currentPage === totalPages}
           >
             <ChevronsRight size={16} />
@@ -238,32 +180,6 @@ const Table = ({
       </div>
     </div>
   );
-};
-
-const useKeyboardNavigation = (totalPages, currentPage, setCurrentPage) => {
-  React.useEffect(() => {
-    const handleKeyDown = (e) => {
-      switch (e.key) {
-        case 'ArrowLeft':
-          setCurrentPage((prev) => Math.max(prev - 1, 1));
-          break;
-        case 'ArrowRight':
-          setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-          break;
-        case 'Home':
-          setCurrentPage(1);
-          break;
-        case 'End':
-          setCurrentPage(totalPages);
-          break;
-        default:
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [totalPages, setCurrentPage]);
 };
 
 export default Table;

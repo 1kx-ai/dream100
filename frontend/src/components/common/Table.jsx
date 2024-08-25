@@ -15,7 +15,6 @@ const Table = ({
   onSort,
   onPageChange,
 }) => {
-  print(data)
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [selectedRows, setSelectedRows] = useState([]);
@@ -51,7 +50,6 @@ const Table = ({
     );
   }
 
-  print(data)
 
   if (data?.length === 0) {
     return (

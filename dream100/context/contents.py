@@ -3,6 +3,7 @@ from dream100.models.content import Content, ContentStatus
 from dream100.models.web_property import WebProperty
 from dream100.models.content_embedding import ContentEmbedding
 from dream100.models.influencer import Influencer
+from dream100.models.project import Project
 from sqlalchemy import select, func
 from sqlalchemy.sql.expression import cast
 from sqlalchemy import Float
@@ -135,7 +136,7 @@ class ContentContext:
         query = self.list_contents_query(**kwargs)
         yield from self.session.execute(query).scalars().yield_per(batch_size)
 
-    def search_contents(self, query_embedding, per_page=10, page=0):
+    def search_contents(self, query_embedding, project_id=None, per_page=10, page=0):
         # Perform the vector similarity search with pagination
         query = (
             self.session.query(
@@ -147,7 +148,16 @@ class ContentContext:
                 ).label("distance"),
             )
             .join(Content.embeddings)
-            .group_by(Content.id)
+            .join(Content.web_property)
+            .join(WebProperty.influencer)
+            .join(Influencer.projects)
+        )
+
+        if project_id is not None:
+            query = query.filter(Project.id == project_id)
+
+        query = (
+            query.group_by(Content.id)
             .order_by("distance")
             .offset(page * per_page)
             .limit(per_page)
@@ -161,10 +171,10 @@ class ContentContext:
             for content, distance in results
         ]
 
-        # Get total count
-        total_count = (
-            self.session.query(Content).join(Content.embeddings).distinct().count()
-        )
+        if project_id is not None:
+            total_count_query = query.filter(Project.id == project_id)
+
+        total_count = total_count_query.distinct().count()
 
         return {
             "contents": contents,

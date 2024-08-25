@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { contentsApi } from '../services/contentsApi';
 import Table from '../components/common/Table';
 import SearchInput from '../components/common/SearchInput';
+import { Link } from 'react-router-dom';
 
 const ContentsPage = () => {
   const [contents, setContents] = useState([]);
@@ -68,8 +69,6 @@ const ContentsPage = () => {
     setCurrentPage(page);
   };
 
-  console.log(contents)
-
   const columns = [
     { key: 'id', label: 'ID' },
     { key: 'link', label: 'Url' },
@@ -80,7 +79,7 @@ const ContentsPage = () => {
       label: 'Actions',
       render: (_, content) => (
         <div className="flex space-x-2">
-          <button className="btn btn-primary btn-sm">View</button>
+          <Link href={`/content/${content.id}`} className="btn btn-primary btn-sm">View</Link>
         </div>
       ),
     },

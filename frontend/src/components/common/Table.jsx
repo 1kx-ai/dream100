@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { ChevronUp, ChevronDown, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, Search } from 'lucide-react';
+import { ChevronUp, ChevronDown, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-react';
+import SearchInput from './SearchInput';
 
 const Table = ({
   data,
@@ -18,7 +19,6 @@ const Table = ({
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [selectedRows, setSelectedRows] = useState([]);
-
   const handleSort = useCallback((column) => {
     const newDirection = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';
     setSortColumn(column);
@@ -26,10 +26,6 @@ const Table = ({
     onSort(column, newDirection);
   }, [sortColumn, sortDirection, onSort]);
 
-  const handleSearch = (event) => {
-    const value = event.target.value;
-    onSearch(value);
-  };
 
   const handleRowSelect = useCallback((id) => {
     setSelectedRows((prev) =>
@@ -65,19 +61,7 @@ const Table = ({
     <div className={`overflow-x-auto ${customClasses.wrapper || ''}`}>
       {showSearch && (
         <div className="mb-4 w-full">
-          <div className="form-control w-full">
-            <div className="input-group w-full">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="input input-bordered flex-grow"
-                onChange={handleSearch}
-              />
-              <button className="btn">
-                <Search size={20} />
-              </button>
-            </div>
-          </div>
+          <SearchInput onSearch={onSearch} />
         </div>
       )}
       <div className="overflow-x-auto">

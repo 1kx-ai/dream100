@@ -79,7 +79,7 @@ const ContentsPage = () => {
       label: 'Actions',
       render: (_, content) => (
         <div className="flex space-x-2">
-          <Link href={`/content/${content.id}`} className="btn btn-primary btn-sm">View</Link>
+          <Link to={`/content/${content.id}`} className="btn btn-primary btn-sm">View</Link>
         </div>
       ),
     },

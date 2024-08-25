@@ -33,7 +33,7 @@ class WebProperty(Base):
     followers = Column(Integer)
 
     influencer = relationship("Influencer", back_populates="web_properties")
-    contents = relationship("Content", back_populates="web_property")
+    contents = relationship("Content", back_populates="web_property", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<WebProperty(id={self.id}, type={self.type},  url='{self.url}')>"

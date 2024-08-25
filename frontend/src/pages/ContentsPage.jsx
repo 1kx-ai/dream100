@@ -36,10 +36,10 @@ const ContentsPage = () => {
         currentProjectId
       );
       const data = response.contents.map(({ content, distance }) => {
-        content.relevance = (1 - (distance / 2))
+        content.relevance = `${Math.round((1 - (distance / 2)) * 100)}%`;
         content.content_preview = content.scraped_content.slice(0, 250);
-        return content
-      })
+        return content;
+      });
       setContents(data);
       setTotalItems(response.count);
       setError(null);

@@ -23,7 +23,8 @@ const Table = ({
   onRowClick,
   customClasses = {},
   loading = false,
-  showSearch = true, // New prop to control search bar visibility
+  showSearch = true,
+  onSearch, // New prop for search callback
 }) => {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
@@ -47,7 +48,11 @@ const Table = ({
   }, 300);
 
   const handleSearch = (event) => {
-    debouncedSearch(event.target.value);
+    const value = event.target.value;
+    debouncedSearch(value);
+    if (onSearch) {
+      onSearch(value);
+    }
   };
 
   const handleRowSelect = useCallback((id) => {

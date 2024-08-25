@@ -1,14 +1,12 @@
 from dream100.db_config import create_session
-from dream100.models.content import Content, ContentStatus
-from dream100.models.web_property import WebProperty, WebPropertyType
+from dream100.models.content import ContentStatus
+from dream100.models.web_property import WebPropertyType
 from dream100.context.contents import ContentContext
 from dream100.context.content_embeddings import ContentEmbeddingContext
 from dream100.utilities.embedding_utils import (
     chunk_content,
     batch_create_embeddings,
 )
-from sqlalchemy import select, func
-from sqlalchemy.orm import joinedload
 import logging
 
 
@@ -39,6 +37,7 @@ class EmbedYoutubeTranscripts:
         )
 
         for content in content_iterator:
+            print("before process content")
             self.process_content(content)
 
     def process_content(self, content):

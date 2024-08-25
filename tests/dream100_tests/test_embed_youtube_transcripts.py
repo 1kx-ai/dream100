@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import patch
+from dream100.models.content import ContentStatus
 from dream100.services.embed_youtube_transcripts import embed_youtube_transcripts
 from dream100.context.content_embeddings import ContentEmbeddingContext
 from tests.mocks.mock_model import MockEmbeddingModel
@@ -7,7 +8,9 @@ from tests.mocks.mock_model import MockEmbeddingModel
 
 def test_embed_youtube_transcripts(db_session, create_content):
     with patch("dream100.utilities.model.EmbeddingModel", MockEmbeddingModel):
-        content = create_content(scraped_content="Scraped Content")
+        content = create_content(
+            scraped_content="Scraped Content", status=ContentStatus.OK
+        )
         content_id = content.id
         embed_youtube_transcripts(session=db_session)
         embedding_context = ContentEmbeddingContext(db_session)
@@ -29,7 +32,9 @@ def test_embed_youtube_transcripts_with_influencer_id(
             url="https://www.youtube.com/testchannel",
         )
         content = create_content(
-            web_property_id=web_property.id, scraped_content="Scraped Content"
+            web_property_id=web_property.id,
+            scraped_content="Scraped Content",
+            status=ContentStatus.OK,
         )
         content_id = content.id
         embed_youtube_transcripts(session=db_session, influencer_id=influencer.id)

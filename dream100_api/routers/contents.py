@@ -22,5 +22,4 @@ def search_contents(
     results = content_context.search_contents(
         query_embedding, project_id=project_id, per_page=per_page, page=page
     )
-    print(results)
     return ContentSearchResponse(**results)

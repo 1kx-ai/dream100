@@ -25,11 +25,11 @@ class ContentCreate(ContentBase):
 class Content(ContentBase):
     id: int
     web_property_id: int
-    created_at: datetime
-    updated_at: datetime
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ContentUpdate(BaseModel):
@@ -42,6 +42,9 @@ class ContentUpdate(BaseModel):
 class ContentSearchResult(BaseModel):
     content: Content
     distance: float
+
+    class Config:
+        from_attributes = True
 
 
 class ContentSearchResponse(BaseModel):

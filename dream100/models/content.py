@@ -21,7 +21,9 @@ class Content(Base):
     views = Column(Integer, default=0)
     status = Column(Enum(ContentStatus), default=ContentStatus.NONE, nullable=False)
 
-    web_property = relationship("WebProperty", back_populates="contents")
+    web_property = relationship(
+        "WebProperty", back_populates="contents", single_parent=True
+    )
 
     def __repr__(self):
-        return f"<Content(id={self.id}, link='{self.link}', views={self.views}, status={self.status}, scraped_content={self.scraped_content})>"
+        return f"<Content(id={self.id}, link='{self.link}', views={self.views}, status={self.status}, scraped_content={self.scraped_content[:100]})>"

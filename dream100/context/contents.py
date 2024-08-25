@@ -171,10 +171,7 @@ class ContentContext:
             for content, distance in results
         ]
 
-        if project_id is not None:
-            total_count_query = query.filter(Project.id == project_id)
-
-        total_count = total_count_query.distinct().count()
+        total_count = query.distinct().count()
 
         return {
             "contents": contents,

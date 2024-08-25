@@ -34,7 +34,12 @@ const ContentsPage = () => {
         sortDirection,
         currentProjectId
       );
-      setContents(response.results);
+      const data = response.contents.map(({ content, distance }) => {
+        content.relevance = (1 - (distance / 2))
+        content.content_preview = content.scraped_content.slice(0, 250);
+        return content
+      })
+      setContents(data);
       setTotalItems(response.count);
       setError(null);
     } catch (err) {
@@ -63,11 +68,13 @@ const ContentsPage = () => {
     setCurrentPage(page);
   };
 
+  console.log(contents)
+
   const columns = [
     { key: 'id', label: 'ID' },
-    { key: 'title', label: 'Title' },
-    { key: 'content_type', label: 'Type' },
-    { key: 'created_at', label: 'Created At' },
+    { key: 'link', label: 'Url' },
+    { key: 'content_preview', label: 'Content' },
+    { key: 'relevance', label: 'Relevance' },
     {
       key: 'actions',
       label: 'Actions',
